@@ -1,0 +1,1389 @@
+{
+	"tables": {
+		"26fdf24e-c3c2-454f-b407-42c3947ed4b7": {
+			"id": "26fdf24e-c3c2-454f-b407-42c3947ed4b7",
+			"visible": true,
+			"name": "residente",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "ecf58f0a-12cf-4045-8e9e-c6f36bfe59d8",
+					"name": "id",
+					"datatype": "int",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "281aa60f-680d-48e1-a45e-b7276ce39483",
+					"name": "rut",
+					"datatype": "varchar",
+					"param": "9",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "e673eab6-1ef2-45e0-a368-d8a72777e0ed",
+					"name": "nombre",
+					"datatype": "varchar",
+					"param": "25",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "ce1d6a47-be58-4802-8173-41712be106e5",
+					"name": "apellido_p",
+					"datatype": "varchar",
+					"param": "25",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "7bce1f89-654a-48da-89b8-9728d5715864",
+					"name": "apellido_m",
+					"datatype": "varchar",
+					"param": "25",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "eb7d0cd2-078b-46d0-98cb-c49f67b290bf",
+					"name": "correo",
+					"datatype": "varchar",
+					"param": "50",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "6a5e98df-4d2f-4c44-9015-21166b9d1236",
+					"name": "torre",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "d68cedf5-b8d8-42c9-bda3-cb4592dd35b0",
+					"name": "departamento",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				}
+			],
+			"relations": [
+				"9d6e5e37-d2d1-4d55-97af-20ff0d08e883",
+				"c43bb8ca-d79d-456c-a25e-6684f4c0e0ec",
+				"2622e56a-c9cf-4b52-afc1-7b5db48bf893"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "f97f1612-5c03-46be-b68e-a4901c507feb",
+					"name": "residente_pkey",
+					"isPk": true,
+					"mssql": {
+						"clustered": true
+					},
+					"cols": [
+						{
+							"id": "6505f697-b83e-4341-94eb-2c2ed2f16de8",
+							"colid": "ecf58f0a-12cf-4045-8e9e-c6f36bfe59d8"
+						}
+					]
+				},
+				{
+					"id": "b7a976aa-fa49-4fa0-8d5e-bd35d5c66cbc",
+					"isPk": false,
+					"name": "residente_uk",
+					"cols": [
+						{
+							"id": "abe33f79-dc05-45c3-a695-e5d2e7694d5d",
+							"colid": "281aa60f-680d-48e1-a45e-b7276ce39483"
+						}
+					],
+					"mssql": {
+						"clustered": true
+					}
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"beforeScript": "",
+			"afterScript": "",
+			"mssql": {
+				"schema": "dbo"
+			}
+		},
+		"72325a73-d13e-4ac6-b6ba-2d428626c0c0": {
+			"id": "72325a73-d13e-4ac6-b6ba-2d428626c0c0",
+			"visible": true,
+			"name": "estacionamiento",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "901f371f-6812-4575-95bc-3317cc5f4153",
+					"name": "id",
+					"datatype": "int",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "1e1c3494-58b0-4914-b01f-382224c9161e",
+					"name": "is_visita",
+					"datatype": "bit",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "5aceaf64-ede0-487f-95e8-b08e65b1da60",
+					"name": "residente_id",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": true
+				},
+				{
+					"id": "dcdd410c-5c62-482c-b9c8-c162bf044e6d",
+					"name": "sector_id",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": true
+				}
+			],
+			"relations": [
+				"c43bb8ca-d79d-456c-a25e-6684f4c0e0ec",
+				"dd639083-4594-4615-b261-4af487dcae7d",
+				"1385aa94-bb12-4ecf-9019-fc8238863f32",
+				"c3773b58-0a20-409e-9d0a-e514457f08a2"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "85223530-e0e3-47fa-a0be-c86ab5fb9e94",
+					"name": "estacionamiento_pkey",
+					"isPk": true,
+					"mssql": {
+						"clustered": true
+					},
+					"cols": [
+						{
+							"id": "b223686a-5943-44b6-9a63-8ea5a7b9fe4f",
+							"colid": "901f371f-6812-4575-95bc-3317cc5f4153"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"beforeScript": "",
+			"afterScript": "",
+			"mssql": {
+				"schema": "dbo"
+			}
+		},
+		"eb52b687-e375-4361-a43e-56b06e1908de": {
+			"id": "eb52b687-e375-4361-a43e-56b06e1908de",
+			"visible": true,
+			"name": "sector",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "8bcb26fa-0f0f-4c2c-a66a-ed5a1357711b",
+					"name": "id",
+					"datatype": "int",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "87db3d0e-b6b9-4fd5-8b67-2d1c56074616",
+					"name": "nombre",
+					"datatype": "varchar",
+					"param": "25",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				}
+			],
+			"relations": [
+				"1385aa94-bb12-4ecf-9019-fc8238863f32"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "2dbc15ca-a5b4-43ae-90b0-6ef9e7f87df3",
+					"name": "sector_pkey1",
+					"isPk": true,
+					"mssql": {
+						"clustered": true
+					},
+					"cols": [
+						{
+							"id": "4cd22432-c5c8-4ec0-8819-385eaf8a6952",
+							"colid": "8bcb26fa-0f0f-4c2c-a66a-ed5a1357711b"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"beforeScript": "",
+			"afterScript": "",
+			"mssql": {
+				"schema": "dbo"
+			}
+		},
+		"2c0f9729-0f9b-4e91-a6da-a47b50d85b3b": {
+			"id": "2c0f9729-0f9b-4e91-a6da-a47b50d85b3b",
+			"visible": true,
+			"name": "vehiculo",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "ccf53f56-a214-4c25-a375-407590120acc",
+					"name": "id",
+					"datatype": "int",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "cd74d18b-4d15-4e25-9ec2-0d69cec23118",
+					"name": "patente",
+					"datatype": "varchar",
+					"param": "6",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "1f3eabe6-6c1e-4d82-9163-52767dd2ca8a",
+					"name": "marca",
+					"datatype": "varchar",
+					"param": "25",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "ef747283-b3bf-474a-bfe3-75f3e4916fe1",
+					"name": "modelo",
+					"datatype": "varchar",
+					"param": "50",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "79190efe-d4c8-4c59-8c52-5aa1fac837e7",
+					"name": "anio",
+					"datatype": "int",
+					"param": "4",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "8e9089d1-c0e6-4ae3-bfee-e43841eb26bc",
+					"name": "color",
+					"datatype": "varchar",
+					"param": "25",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "1d58b4e1-ce78-423c-af0e-fca5825e2ef8",
+					"name": "is_visit",
+					"datatype": "bit",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "4b533c05-a07f-4aee-afde-f6f740d1bfbc",
+					"name": "residente_id",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": true
+				},
+				{
+					"id": "fc64af97-b28b-47eb-98e0-bcec73bdb4a4",
+					"name": "estacionamiento_id",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": true
+				}
+			],
+			"relations": [
+				"9d6e5e37-d2d1-4d55-97af-20ff0d08e883",
+				"c3773b58-0a20-409e-9d0a-e514457f08a2",
+				"483952ee-2478-424f-8dbc-a739876ff8d2",
+				"e8f43882-bb13-422b-ae98-c4e84612f490"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "ef310916-d27f-401e-a204-a3b8741c3618",
+					"name": "vehiculo_pkey",
+					"isPk": true,
+					"mssql": {
+						"clustered": true
+					},
+					"cols": [
+						{
+							"id": "95a7bc5d-3cb1-45fc-ac71-697599614386",
+							"colid": "ccf53f56-a214-4c25-a375-407590120acc"
+						}
+					]
+				},
+				{
+					"id": "90c72889-7d19-4ea1-bcbf-b40d5e05de13",
+					"isPk": false,
+					"name": "vehiculo_uk",
+					"cols": [
+						{
+							"id": "c20afa03-7e2d-429b-b8c0-7c0e67c68f03",
+							"colid": "cd74d18b-4d15-4e25-9ec2-0d69cec23118"
+						}
+					],
+					"mssql": {
+						"clustered": true
+					}
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"beforeScript": "",
+			"afterScript": "",
+			"mssql": {
+				"schema": "dbo"
+			}
+		},
+		"38d4a020-35db-4bbe-b649-9dab5977b831": {
+			"id": "38d4a020-35db-4bbe-b649-9dab5977b831",
+			"visible": true,
+			"name": "visita",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "3324bbc7-6209-4a56-b082-216b0dab98ae",
+					"name": "id",
+					"datatype": "int",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": false
+				},
+				{
+					"id": "b355bec7-cc44-46de-b5b8-f9fb72d54b2b",
+					"name": "rut",
+					"datatype": "varchar",
+					"param": "9",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": false
+				},
+				{
+					"id": "b72055e3-2034-42e0-b1d3-017adb31e2fa",
+					"name": "nombre",
+					"datatype": "varchar",
+					"param": "25",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": false
+				},
+				{
+					"id": "4bc02b49-2878-463d-a3f0-0872078dbce5",
+					"name": "apellido_p",
+					"datatype": "varchar",
+					"param": "25",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": false
+				},
+				{
+					"id": "b16aa5ae-7747-4e9a-addc-3aa784c55f0e",
+					"name": "apellido_m",
+					"datatype": "varchar",
+					"param": "25",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": false
+				},
+				{
+					"id": "f245342f-6e60-4d8e-8303-3deda0341ddf",
+					"name": "fecha_in",
+					"datatype": "datetime",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "10052cf8-25d6-4f84-85f7-24955717df0f",
+					"name": "facha_out",
+					"datatype": "datetime",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "15174ef5-217e-43c6-9dd1-ac961440f68f",
+					"name": "residente_id",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": true
+				},
+				{
+					"id": "f8b4092b-3904-4cb9-908f-f472b8e493a2",
+					"name": "estacionamiento_id",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": true
+				},
+				{
+					"id": "dd3ce2f4-fec5-4ef7-9c69-520588c6a0b1",
+					"name": "vehiculo_id",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": true
+				}
+			],
+			"relations": [
+				"2622e56a-c9cf-4b52-afc1-7b5db48bf893",
+				"dd639083-4594-4615-b261-4af487dcae7d",
+				"e8f43882-bb13-422b-ae98-c4e84612f490"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "41e5ed21-e568-46ec-bab4-5dc530e89e71",
+					"name": "visita_pkey",
+					"isPk": true,
+					"mssql": {
+						"clustered": true
+					},
+					"cols": [
+						{
+							"id": "d4894e21-c418-48ec-ac20-4a23bed3037b",
+							"colid": "3324bbc7-6209-4a56-b082-216b0dab98ae"
+						}
+					]
+				},
+				{
+					"id": "253e2def-ebd4-4c15-987c-49c947b2ba27",
+					"isPk": false,
+					"name": "visita_uk",
+					"cols": [
+						{
+							"id": "b1306e86-caf0-4519-b090-996c6765fda2",
+							"colid": "b355bec7-cc44-46de-b5b8-f9fb72d54b2b"
+						}
+					],
+					"mssql": {
+						"clustered": true
+					}
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"beforeScript": "",
+			"afterScript": "",
+			"mssql": {
+				"schema": "dbo"
+			}
+		},
+		"fe194e28-62fe-49af-a8ae-674139524f9c": {
+			"id": "fe194e28-62fe-49af-a8ae-674139524f9c",
+			"visible": true,
+			"name": "bitacora",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "481ec1ab-0b09-4c5c-bc05-c23796692685",
+					"name": "id",
+					"datatype": "int",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "693c61d7-e4c6-4f56-9812-81f408940b6d",
+					"name": "fecha_in",
+					"datatype": "datetime",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "2a05097b-25c4-45a6-b858-2345416d7164",
+					"name": "fecha_out",
+					"datatype": "datetime",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "78f9c045-7f30-4ae5-b887-fdaee4482dff",
+					"name": "patente",
+					"datatype": "varchar",
+					"param": "6",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": ""
+				},
+				{
+					"id": "e686529b-4d6c-430c-9ca1-470048ca2964",
+					"name": "visita_id",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": false
+				},
+				{
+					"id": "f1c7ac17-9770-4a0c-a9f8-8b9f32bd410d",
+					"name": "vehiculo_id",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"collation": null,
+					"mssql": {
+						"computed": ""
+					},
+					"estimatedSize": "",
+					"fk": true
+				}
+			],
+			"relations": [
+				"483952ee-2478-424f-8dbc-a739876ff8d2"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "dc14bf92-0fce-40eb-b9d5-e022d3b95d58",
+					"name": "table1_pkey",
+					"isPk": true,
+					"mssql": {
+						"clustered": true
+					},
+					"cols": [
+						{
+							"id": "51c66975-8d32-49a4-acfe-7acfc6b8855d",
+							"colid": "481ec1ab-0b09-4c5c-bc05-c23796692685"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"beforeScript": "",
+			"afterScript": "",
+			"mssql": {
+				"schema": "dbo"
+			}
+		}
+	},
+	"relations": {
+		"9d6e5e37-d2d1-4d55-97af-20ff0d08e883": {
+			"id": "9d6e5e37-d2d1-4d55-97af-20ff0d08e883",
+			"visible": true,
+			"name": "vehiculo_residente_id_fkey",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "f97f1612-5c03-46be-b68e-a4901c507feb",
+			"parent": "26fdf24e-c3c2-454f-b407-42c3947ed4b7",
+			"child": "2c0f9729-0f9b-4e91-a6da-a47b50d85b3b",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "9036a524-1c70-4600-84b5-d27afb576d17",
+					"parentcol": "ecf58f0a-12cf-4045-8e9e-c6f36bfe59d8",
+					"childcol": "4b533c05-a07f-4aee-afde-f6f740d1bfbc"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
+		},
+		"c43bb8ca-d79d-456c-a25e-6684f4c0e0ec": {
+			"id": "c43bb8ca-d79d-456c-a25e-6684f4c0e0ec",
+			"visible": true,
+			"name": "estacionamiento_residente_id_fkey",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "f97f1612-5c03-46be-b68e-a4901c507feb",
+			"parent": "26fdf24e-c3c2-454f-b407-42c3947ed4b7",
+			"child": "72325a73-d13e-4ac6-b6ba-2d428626c0c0",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "c180e26c-a4e4-4373-bd8c-83b1c0ca4e51",
+					"parentcol": "ecf58f0a-12cf-4045-8e9e-c6f36bfe59d8",
+					"childcol": "5aceaf64-ede0-487f-95e8-b08e65b1da60"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
+		},
+		"2622e56a-c9cf-4b52-afc1-7b5db48bf893": {
+			"id": "2622e56a-c9cf-4b52-afc1-7b5db48bf893",
+			"visible": true,
+			"name": "visita_residente_id_fkey",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "f97f1612-5c03-46be-b68e-a4901c507feb",
+			"parent": "26fdf24e-c3c2-454f-b407-42c3947ed4b7",
+			"child": "38d4a020-35db-4bbe-b649-9dab5977b831",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "5a9b8e37-832f-4d24-8353-66eeb395a6e7",
+					"parentcol": "ecf58f0a-12cf-4045-8e9e-c6f36bfe59d8",
+					"childcol": "15174ef5-217e-43c6-9dd1-ac961440f68f"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
+		},
+		"dd639083-4594-4615-b261-4af487dcae7d": {
+			"id": "dd639083-4594-4615-b261-4af487dcae7d",
+			"visible": true,
+			"name": "visita_estacionamiento_id_fkey",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "85223530-e0e3-47fa-a0be-c86ab5fb9e94",
+			"parent": "72325a73-d13e-4ac6-b6ba-2d428626c0c0",
+			"child": "38d4a020-35db-4bbe-b649-9dab5977b831",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "one",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "ed3d473d-3ee9-405f-be12-c4425ffb0165",
+					"parentcol": "901f371f-6812-4575-95bc-3317cc5f4153",
+					"childcol": "f8b4092b-3904-4cb9-908f-f472b8e493a2"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
+		},
+		"1385aa94-bb12-4ecf-9019-fc8238863f32": {
+			"id": "1385aa94-bb12-4ecf-9019-fc8238863f32",
+			"visible": true,
+			"name": "estacionamiento_sector_id_fkey",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "2dbc15ca-a5b4-43ae-90b0-6ef9e7f87df3",
+			"parent": "eb52b687-e375-4361-a43e-56b06e1908de",
+			"child": "72325a73-d13e-4ac6-b6ba-2d428626c0c0",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "351e6397-15e0-4117-b7ce-d84d296f7680",
+					"parentcol": "8bcb26fa-0f0f-4c2c-a66a-ed5a1357711b",
+					"childcol": "dcdd410c-5c62-482c-b9c8-c162bf044e6d"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
+		},
+		"c3773b58-0a20-409e-9d0a-e514457f08a2": {
+			"id": "c3773b58-0a20-409e-9d0a-e514457f08a2",
+			"visible": true,
+			"name": "vehiculo_estacionamiento_id_fkey",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "85223530-e0e3-47fa-a0be-c86ab5fb9e94",
+			"parent": "72325a73-d13e-4ac6-b6ba-2d428626c0c0",
+			"child": "2c0f9729-0f9b-4e91-a6da-a47b50d85b3b",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "one",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "d83ccf15-ac5b-4797-b670-c50eeb10fa3f",
+					"parentcol": "901f371f-6812-4575-95bc-3317cc5f4153",
+					"childcol": "fc64af97-b28b-47eb-98e0-bcec73bdb4a4"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
+		},
+		"483952ee-2478-424f-8dbc-a739876ff8d2": {
+			"id": "483952ee-2478-424f-8dbc-a739876ff8d2",
+			"visible": true,
+			"name": "bitacora_vehiculo_id_fkey",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "ef310916-d27f-401e-a204-a3b8741c3618",
+			"parent": "2c0f9729-0f9b-4e91-a6da-a47b50d85b3b",
+			"child": "fe194e28-62fe-49af-a8ae-674139524f9c",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "75d8a12f-be93-4dcf-98e3-0913228b6884",
+					"parentcol": "ccf53f56-a214-4c25-a375-407590120acc",
+					"childcol": "f1c7ac17-9770-4a0c-a9f8-8b9f32bd410d"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
+		},
+		"e8f43882-bb13-422b-ae98-c4e84612f490": {
+			"id": "e8f43882-bb13-422b-ae98-c4e84612f490",
+			"visible": true,
+			"name": "visita_vehiculo_id_fkey",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "ef310916-d27f-401e-a204-a3b8741c3618",
+			"parent": "2c0f9729-0f9b-4e91-a6da-a47b50d85b3b",
+			"child": "38d4a020-35db-4bbe-b649-9dab5977b831",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "one",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "959905e8-29fe-4afe-a909-5dab223f1649",
+					"parentcol": "ccf53f56-a214-4c25-a375-407590120acc",
+					"childcol": "dd3ce2f4-fec5-4ef7-9c69-520588c6a0b1"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
+		}
+	},
+	"notes": {},
+	"lines": {},
+	"model": {
+		"name": "vehicontrol",
+		"id": "28145f47-4e2a-44d1-b234-68c255183eaa",
+		"activeDiagram": "a3f18da0-e0df-4fbf-98c8-f524a52f833d",
+		"desc": "Modelado correspondiente a la base de datos del proyecto vehicontrol",
+		"path": "",
+		"type": "MSSQL",
+		"version": 1,
+		"parentTableInFkCols": true,
+		"caseConvention": "under",
+		"replaceSpace": "_",
+		"color": "transparent",
+		"sideSelections": true,
+		"isDirty": true,
+		"storedin": {
+			"major": 8,
+			"minor": 5,
+			"extra": 1
+		},
+		"laststoredin": {
+			"major": 8,
+			"minor": 5,
+			"extra": 1
+		},
+		"writeFileParam": false,
+		"authorName": "",
+		"companyDetails": "",
+		"companyUrl": "",
+		"def_coltopk": true,
+		"mssql": {
+			"schema": ""
+		},
+		"sqlSettings": {
+			"wrapLines": true,
+			"wrapOffset": 80,
+			"indent": true,
+			"indentationString": "spaces",
+			"indentationSize": 2,
+			"limitItemsOnLine": true,
+			"maxListItemsOnLine": 3,
+			"statementDelimiter": "GO",
+			"routineDelimiter": ";",
+			"keywordCase": "upper",
+			"identiferCase": "original",
+			"includeSchema": "always",
+			"quotation": "if_needed",
+			"includeGeneratedNames": "always",
+			"quotationType": "square_brackets"
+		},
+		"nameAutoGeneration": {
+			"keys": true,
+			"indexes": true,
+			"relations": true
+		},
+		"connectionVersion": ""
+	},
+	"otherObjects": {},
+	"diagrams": {
+		"a3f18da0-e0df-4fbf-98c8-f524a52f833d": {
+			"name": "Main Diagram",
+			"description": "",
+			"id": "a3f18da0-e0df-4fbf-98c8-f524a52f833d",
+			"keysgraphics": true,
+			"linegraphics": "detailed",
+			"zoom": 1,
+			"background": "transparent",
+			"lineColor": "transparent",
+			"isOpen": true,
+			"main": true,
+			"diagramItems": {
+				"26fdf24e-c3c2-454f-b407-42c3947ed4b7": {
+					"referencedItemId": "26fdf24e-c3c2-454f-b407-42c3947ed4b7",
+					"x": 478,
+					"y": 577,
+					"gHeight": 171,
+					"gWidth": 220,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"72325a73-d13e-4ac6-b6ba-2d428626c0c0": {
+					"referencedItemId": "72325a73-d13e-4ac6-b6ba-2d428626c0c0",
+					"x": 487,
+					"y": 387,
+					"gHeight": 99,
+					"gWidth": 191,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"eb52b687-e375-4361-a43e-56b06e1908de": {
+					"referencedItemId": "eb52b687-e375-4361-a43e-56b06e1908de",
+					"x": 792,
+					"y": 440,
+					"gHeight": 63,
+					"gWidth": 204,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"2c0f9729-0f9b-4e91-a6da-a47b50d85b3b": {
+					"referencedItemId": "2c0f9729-0f9b-4e91-a6da-a47b50d85b3b",
+					"x": 476,
+					"y": 104,
+					"gHeight": 189,
+					"gWidth": 224,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"38d4a020-35db-4bbe-b649-9dab5977b831": {
+					"referencedItemId": "38d4a020-35db-4bbe-b649-9dab5977b831",
+					"x": 122,
+					"y": 248,
+					"gHeight": 207,
+					"gWidth": 224,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				},
+				"fe194e28-62fe-49af-a8ae-674139524f9c": {
+					"referencedItemId": "fe194e28-62fe-49af-a8ae-674139524f9c",
+					"x": 721,
+					"y": 170,
+					"gHeight": 135,
+					"gWidth": 202,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
+				}
+			},
+			"scroll": {
+				"x": 0,
+				"y": 0
+			},
+			"type": "erd",
+			"showHorizontal": true,
+			"showDescriptions": true,
+			"showIndicators": true,
+			"showProgress": true,
+			"lineWidth": "2",
+			"boxSize": "0",
+			"boxSpacing": "2",
+			"boxAlign": "center",
+			"showIndicatorCaptions": true,
+			"showEstimatedSize": false,
+			"showSchemaContainer": true,
+			"showEmbeddedInParents": true,
+			"showCardinalityCaptions": true,
+			"showRelationshipNames": false,
+			"showLineCaptions": false,
+			"showColumns": true,
+			"showColumnDataTypes": true,
+			"showSampleData": false,
+			"showTableIndexes": true,
+			"showTableDescriptions": false,
+			"showRelations": true,
+			"backgroundImage": "na",
+			"descriptionsColor": "transparent",
+			"embeddedSpacing": "2",
+			"showMainIcon": true,
+			"showLabels": true,
+			"showCustomizations": false
+		}
+	},
+	"diagramsOrder": [],
+	"order": [
+		"26fdf24e-c3c2-454f-b407-42c3947ed4b7",
+		"72325a73-d13e-4ac6-b6ba-2d428626c0c0",
+		"eb52b687-e375-4361-a43e-56b06e1908de",
+		"2c0f9729-0f9b-4e91-a6da-a47b50d85b3b",
+		"38d4a020-35db-4bbe-b649-9dab5977b831",
+		"fe194e28-62fe-49af-a8ae-674139524f9c",
+		"9d6e5e37-d2d1-4d55-97af-20ff0d08e883",
+		"c43bb8ca-d79d-456c-a25e-6684f4c0e0ec",
+		"2622e56a-c9cf-4b52-afc1-7b5db48bf893",
+		"dd639083-4594-4615-b261-4af487dcae7d",
+		"1385aa94-bb12-4ecf-9019-fc8238863f32",
+		"c3773b58-0a20-409e-9d0a-e514457f08a2",
+		"483952ee-2478-424f-8dbc-a739876ff8d2",
+		"e8f43882-bb13-422b-ae98-c4e84612f490"
+	],
+	"collapsedTreeItems": [],
+	"reverseStats": {}
+}
