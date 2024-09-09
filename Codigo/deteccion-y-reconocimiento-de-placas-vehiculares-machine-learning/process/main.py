@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
-from process.computer_vision_models.main import (VehicleDetection, PlateSegmentation)
-from process.ocr_extraction.main import TextExtraction
+from computer_vision_models.main import (VehicleDetection, PlateSegmentation)
+from ocr_extraction.main import TextExtraction
 
 
 class PlateRecognition:
