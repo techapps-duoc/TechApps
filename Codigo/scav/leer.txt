@@ -1,0 +1,12 @@
+instalar el tesseract y cambiar la direccion segun corresponda revisar si 
+genera la carpeta ya que tuve hacerla manual para que funcionara la parte
+a cambiar es la sig. 
+pytesseract.pytesseract.tesseract_cmd = r'C:\ruta\a\tesseract.exe'
+
+
+
+pip install opencv-python
+pip install numpy
+pip install pytesseract
+
+
