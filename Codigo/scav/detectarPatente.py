@@ -3,83 +3,97 @@ import numpy as np
 import pytesseract
 import re
 
-# ruta de Tesseract en tu sistema recordar instalar antes de usar
+# Ruta de Tesseract en tu sistema (asegúrate de tenerlo instalado)
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-
-# Rango de colores en HSV para blanco, amarillo y naranjo para resaltar busqueda patente
-color_ranges = {
+# Rango de colores en HSV para blanco, amarillo y naranjo
+COLOR_RANGES = {
     'blanco': ([0, 0, 200], [180, 30, 255]),  # Blanco
     'amarillo': ([20, 100, 100], [30, 255, 255]),  # Amarillo
     'naranjo': ([10, 100, 100], [20, 255, 255])   # Naranjo
 }
 
-# Filtrar solo letras y números
 def filtrar_patente(plate_text):
-    # Usar expresiones eliminar simbolos y dejar solo letras y numeros
+    """Filtra solo letras y números de la cadena OCR."""
     return re.sub(r'[^A-Z0-9]', '', plate_text)
 
-# Detectar colores de patente
 def detectar_color_patente(frame):
+    """Detecta el color predominante de la patente (blanco, amarillo, naranjo)."""
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    
-    for color, (lower, upper) in color_ranges.items():
-        lower = np.array(lower, dtype=np.uint8)
-        upper = np.array(upper, dtype=np.uint8)
-        
-        # Crear una mascara con el color seleccionado
-        mask = cv2.inRange(hsv, lower, upper)
-        
-        # Aplicar la mascara a la imagen
-        result = cv2.bitwise_and(frame, frame, mask=mask)
-        
-        # Retornar el frame y el color si hay coincidencia
-        if np.any(result):
-            return result, color
-    return None, None
+    for color, (lower, upper) in COLOR_RANGES.items():
+        mask = cv2.inRange(hsv, np.array(lower, dtype=np.uint8), np.array(upper, dtype=np.uint8))
+        if np.count_nonzero(mask) > 500:  # Ajustar para evitar falsos positivos
+            return color
+    return None
 
-# Detectar las patentes en tiempo real desde la cámara
+def preprocesar_imagen(frame):
+    """Convierte la imagen a escala de grises y aplica suavizado."""
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    return blur
+
+def detectar_contornos(frame):
+    """Detecta los contornos relevantes en la imagen."""
+    edges = cv2.Canny(frame, 50, 150)
+    contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    return contours
+
+def es_patente_contorno(contour):
+    """Filtra contornos por tamaño aproximado de una patente."""
+    x, y, w, h = cv2.boundingRect(contour)
+    aspect_ratio = w / h
+    return 2.0 < aspect_ratio < 5.0 and 300 < w < 370 and 100 < h < 140
+
+def extraer_texto_patente(roi):
+    """Aplica OCR en la región seleccionada y retorna el texto filtrado."""
+    plate_text = pytesseract.image_to_string(roi, config='--psm 8').strip()
+    return filtrar_patente(plate_text)
+
 def detectar_patente(frame):
-    # Detectar color patente
-    color_frame, color = detectar_color_patente(frame)
-    
-    if color_frame is not None:
-        # Convertir imagen a escala de grises
-        gray = cv2.cvtColor(color_frame, cv2.COLOR_BGR2GRAY)
-        
-        # Suavizar imagen
-        blur = cv2.GaussianBlur(gray, (5, 5), 0)
-        
-        # Detectar bordes
-        edges = cv2.Canny(blur, 100, 200)
-        
-        # Encontrar contornos
-        contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        
-        # Almacenar la patente detectada
-        detected_plate = ""
+    """Detecta la patente en la imagen dada."""
+    preprocessed_frame = preprocesar_imagen(frame)
+    contours = detectar_contornos(preprocessed_frame)
 
-        for contour in contours:
-            # Obtener el rectángulo contorno
+    for contour in contours:
+        if es_patente_contorno(contour):
             x, y, w, h = cv2.boundingRect(contour)
+            roi = frame[y:y + h, x:x + w]
+            patente = extraer_texto_patente(roi)
 
-            # Filtrar por tamaño aproximado de una patente
-            if 300 < w < 370 and 100 < h < 140:
-                # Extraer el área de la posible patente
-                plate_candidate = frame[y:y+h, x:x+w]
-                
-                # Usar OCR para leer la patente
-                plate_text = pytesseract.image_to_string(plate_candidate, config='--psm 8')
-                
-                # Filtrar solo letras y números
-                detected_plate = filtrar_patente(plate_text)
-
-                # Dibujar el rectangulo alrededor de la patente detectada
+            if patente:
+                color = detectar_color_patente(roi)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-                # Mostrar el texto detectado en la imagen
-                cv2.putText(frame, f'Patente: {detected_plate}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
-                
-                return detected_plate
+                cv2.putText(frame, f'Patente: {patente}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
+                if color:
+                    cv2.putText(frame, f'Color: {color}', (x, y + h + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
+                return patente
 
     return None
+
+# Prueba en tiempo real con la cámara
+def main():
+    cap = cv2.VideoCapture(0)  # Asegúrate de que la cámara esté conectada
+    if not cap.isOpened():
+        print("Error al abrir la cámara.")
+        return
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            print("No se pudo obtener el frame de la cámara.")
+            break
+
+        patente = detectar_patente(frame)
+        if patente:
+            print(f"Patente detectada: {patente}")
+
+        cv2.imshow('Detección de Patente', frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    main()
