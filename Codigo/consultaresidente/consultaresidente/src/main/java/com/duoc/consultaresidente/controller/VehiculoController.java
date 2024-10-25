@@ -166,14 +166,17 @@ public class VehiculoController {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode root = objectMapper.readTree(responseJson).path("data");
-            vehicleData.put("plate", root.path("plate").asText());
-            vehicleData.put("make", root.path("make").asText());
-            vehicleData.put("model", root.path("model").asText());
-            vehicleData.put("year", root.path("year").asInt());
+            vehicleData.put("patente", root.path("plate").asText());
+            vehicleData.put("marca", root.path("make").asText());
+            vehicleData.put("modelo", root.path("model").asText());
+            vehicleData.put("anio", root.path("year").asInt());
+            vehicleData.put("color", root.path("color").asInt());
+
 
             JsonNode ownerNode = root.path("owner");
             if (!ownerNode.isMissingNode()) {
-                vehicleData.put("owner", ownerNode.path("fullname").asText());
+                vehicleData.put("nombre", ownerNode.path("fullname").asText());
+                vehicleData.put("rut", ownerNode.path("documentNumber").asText());
             }
         } catch (Exception e) {
             e.printStackTrace();
