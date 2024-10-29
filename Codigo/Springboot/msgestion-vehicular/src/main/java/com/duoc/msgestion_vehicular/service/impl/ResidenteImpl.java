@@ -43,4 +43,9 @@ public class ResidenteImpl implements IResidente {
     public List<Residente> findAll() {
         return residenteRepository.findAll();
     }
+
+    @Override
+    public Optional<Residente> findByRut(String rut) {
+        return residenteRepository.findByRut(rut);
+    }
 }

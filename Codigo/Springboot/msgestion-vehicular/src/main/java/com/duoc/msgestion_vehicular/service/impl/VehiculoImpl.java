@@ -73,4 +73,14 @@ public class VehiculoImpl implements IVehiculo {
     public List<Vehiculo> findAll() {
         return vehiculoRepository.findAll();
     }
+
+    @Override
+    public List<Vehiculo> obtenerVehiculosDeResidentes() {
+        return vehiculoRepository.findByResidenteIsNotNull();
+    }
+
+    @Override
+    public List<Vehiculo> obtenerVehiculosDeVisitas() {
+        return vehiculoRepository.findByVisitaIsNotNull();
+    }
 }

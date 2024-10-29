@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -118,6 +119,34 @@ public class VehiculoController {
             return new ResponseEntity<>(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                     "Error al consultar la API externa: " + e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("vehiculo/residentes")
+    public ResponseEntity<List<Map<String, Object>>> obtenerVehiculosDeResidentes() {
+        List<Vehiculo> vehiculosResidentes = vehiculoService.obtenerVehiculosDeResidentes();
+        List<Map<String, Object>> responseData = vehiculosResidentes.stream()
+                .map(this::convertToMapWithResidenteOVisita)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responseData);
+    }
+
+    // Endpoint para consultar todos los vehículos de visitas
+    @GetMapping("vehiculo/visitas")
+    public ResponseEntity<List<Map<String, Object>>> obtenerVehiculosDeVisitas() {
+        List<Vehiculo> vehiculosVisitas = vehiculoService.obtenerVehiculosDeVisitas();
+        List<Map<String, Object>> responseData = vehiculosVisitas.stream()
+                .map(this::convertToMapWithResidenteOVisita)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responseData);
+    }
+
+    @GetMapping("vehiculos")
+    public ResponseEntity<List<Map<String, Object>>> obtenerAll() {
+        List<Vehiculo> vehiculos = vehiculoService.findAll();
+        List<Map<String, Object>> responseData = vehiculos.stream()
+                .map(this::convertToMapWithResidenteOVisita)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responseData);
     }
 
     // Conversión de vehículo a DTO

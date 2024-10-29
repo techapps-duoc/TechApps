@@ -17,4 +17,6 @@ public interface IResidente {
     void deleteById(Long id);
 
     List<Residente> findAll();
+
+    Optional<Residente> findByRut(String rut);  // Nuevo método para encontrar residente por RUT
 }

@@ -17,4 +17,8 @@ public interface IVehiculo {
     void deleteById(Long id);
 
     List<Vehiculo> findAll();
+
+    List<Vehiculo> obtenerVehiculosDeResidentes();
+
+    List<Vehiculo> obtenerVehiculosDeVisitas();
 }
