@@ -81,6 +81,18 @@ public class ResidenteController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("residente/torre/{torre}/departamento/{departamento}")
+    public ResponseEntity<ApiResponse<Integer>> findByTorreAndDepartamento(@PathVariable Integer torre, @PathVariable Integer departamento) {
+        Residente residente = residenteService.findByTorreAndDepartamento(torre, departamento);
+        if (residente == null) {
+            ApiResponse<Integer> response = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Residente no encontrado en la torre " + torre + " y departamento " + departamento, null);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        ApiResponse<Integer> response = new ApiResponse<>(HttpStatus.OK.value(), "Residente encontrado", residente.getId());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
     private ResidenteDto convertToDto(Residente residente) {
         return ResidenteDto.builder()
                 .id(residente.getId())

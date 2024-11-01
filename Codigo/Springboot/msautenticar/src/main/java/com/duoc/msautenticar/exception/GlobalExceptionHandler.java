@@ -1,4 +1,4 @@
-package com.duoc.msmultas.exception;
+package com.duoc.msautenticar.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.dao.DataAccessException;

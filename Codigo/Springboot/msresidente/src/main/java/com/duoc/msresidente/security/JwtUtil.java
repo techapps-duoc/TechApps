@@ -1,4 +1,4 @@
-package com.duoc.msmultas.security;
+package com.duoc.msresidente.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

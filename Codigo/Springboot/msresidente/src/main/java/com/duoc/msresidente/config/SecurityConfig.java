@@ -1,7 +1,7 @@
-package com.duoc.msmultas.config;
+package com.duoc.msresidente.config;
 
-import com.duoc.msmultas.security.JwtAuthorizationFilter;
-import com.duoc.msmultas.security.JwtUtil;
+import com.duoc.msresidente.security.JwtAuthorizationFilter;
+import com.duoc.msresidente.security.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

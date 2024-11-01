@@ -54,5 +54,10 @@ public class ResidenteImpl implements IResidente {
         return optional.orElse(null);
     }
 
+    @Override
+    public Residente findByTorreAndDepartamento(Integer torre, Integer departamento) {
+        return residenteDao.findByTorreAndDepartamento(torre, departamento);
+    }
+
 
 }

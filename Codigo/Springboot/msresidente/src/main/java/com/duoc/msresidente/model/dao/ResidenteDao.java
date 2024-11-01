@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface ResidenteDao extends CrudRepository<Residente, Integer> {
 
     Optional<Residente> findByRut(String rut);
+    Residente findByTorreAndDepartamento(Integer torre, Integer departamento);
+
 }

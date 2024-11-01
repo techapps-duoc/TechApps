@@ -14,4 +14,7 @@ public interface IResidente {
     Iterable<Residente> findAll();
 
     Residente findByRut(String rut);
+
+    Residente findByTorreAndDepartamento(Integer torre, Integer departamento);
+
 }
