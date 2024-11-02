@@ -1,95 +1,181 @@
 import cv2
-import requests
 import time
-from activacionCamara import iniciar_camara, leer_frame, mostrar_video, liberar_camara
-from detectarPatente import detectar_patente
+import requests
+import config
+from datetime import datetime, timedelta
+from detectarPatente import detectar_patente  # Importa la función desde detectarPatente.py
 
-API_URL_VEHICULO = "http://localhost:8080/api/v1/vehiculo/patente/"
-API_URL_RESIDENTE = "http://localhost:8080/api/v1/residente/"
+# Variables globales para la última patente y resultados
+ultima_patente = None
+ultimo_resultado = None
+ultimo_tiempo = 0
+registro_entradas = {}
 
-def obtener_informacion_residente(residente_id):
-    """Consulta los datos del residente según su ID y los imprime."""
-    url_residente = f"{API_URL_RESIDENTE}{residente_id}"
-    headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
-
-    try:
-        response = requests.get(url_residente, headers=headers, timeout=10)
-        if response.status_code == 200:
-            residente_data = response.json().get('data', {})
-            if residente_data:
-                print("\n--- Información del Residente Asociado ---")
-                for key, value in residente_data.items():
-                    print(f"{key}: {value}")
-                print("\nAcceso permitido. El portón se abrirá.")  # Simulación de apertura
-            else:
-                print("No se encontró información del residente.")
-        else:
-            print(f"Error al consultar residente. Estado: {response.status_code} - {response.text}")
-    except requests.exceptions.RequestException as e:
-        print(f"Error en la solicitud al consultar residente: {e}")
-
-def imprimir_detalles_vehiculo(vehiculo_data):
-    """Imprime los detalles del vehículo de forma clara y sin duplicados."""
-    print("\n--- Detalles del Vehículo ---")
-    for key, value in vehiculo_data.items():
-        if key != "residente":  # Evitar imprimir residente como diccionario completo
-            print(f"{key}: {value}")
-
-def consultar_patente(patente):
-    """Consulta los datos del vehículo por patente y muestra información del residente si existe."""
-    url_vehiculo = f"{API_URL_VEHICULO}{patente}"
-    headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+def consultar_vehiculo(patente):
+    """Consulta los datos de un vehículo específico por su patente."""
+    url = f"{config.API_URL_VEHICULO}patente/{patente}"
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-api-key': config.API_KEY
+    }
 
     try:
-        response = requests.get(url_vehiculo, headers=headers, timeout=10)
-        if response.status_code == 200:
-            vehiculo_data = response.json().get('data', {})
-            if vehiculo_data:
-                imprimir_detalles_vehiculo(vehiculo_data)
-
-                # Verificar si tiene un residente asociado
-                residente_id = vehiculo_data.get('residenteId')
-                if residente_id:
-                    obtener_informacion_residente(residente_id)
-                else:
-                    print("Este vehículo no pertenece a un residente. Esperando confirmación manual.")
-            else:
-                print("No se encontró información del vehículo.")
-        elif response.status_code == 404:
-            print(f"No se encontró ningún vehículo con la patente: {patente}")
-        else:
-            print(f"Error al consultar vehículo. Estado: {response.status_code} - {response.text}")
+        response = requests.get(url, headers=headers)
+        print("Response status code:", response.status_code)
+        response.raise_for_status()
+        return response.json()
     except requests.exceptions.RequestException as e:
-        print(f"Error en la solicitud al consultar vehículo: {e}")
+        print(f"Error al consultar el vehículo: {e}")
+        return None
+
+def registrar_bitacora(vehiculo_id, tipo):
+    """Registra la entrada o salida del vehículo en la bitácora."""
+    url = f"{config.API_URL_BITACORA}bitacora"
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-api-key': config.API_KEY
+    }
+    fecha_actual = datetime.now().isoformat()
+
+    if tipo == "entrada":
+        data = {
+            "vehiculo_id": vehiculo_id,
+            "fecha_in": fecha_actual
+        }
+    elif tipo == "salida":
+        data = {
+            "vehiculo_id": vehiculo_id,
+            "fecha_out": fecha_actual
+        }
+
+    try:
+        response = requests.post(url, json=data, headers=headers)
+        response.raise_for_status()
+        if response.status_code == 201:
+            print(f"{tipo.capitalize()} registrada exitosamente en la bitácora.")
+        else:
+            print(f"Error al registrar la {tipo}: {response.status_code} - {response.text}")
+    except requests.exceptions.RequestException as e:
+        print(f"Error al registrar la {tipo}: {e}")
+
+def manejar_bitacora(patente, vehiculo_id):
+    """Maneja el registro de entrada y salida en la bitácora."""
+    global registro_entradas
+    tiempo_actual = datetime.now()
+
+    if patente in registro_entradas:
+        tiempo_ultimo_registro = registro_entradas[patente]
+        if tiempo_actual - tiempo_ultimo_registro >= timedelta(seconds=30):
+            # Registra salida si pasaron más de 30 segundos
+            print(f"Registrando salida para la patente: {patente}")
+            registrar_bitacora(vehiculo_id, "salida")
+            registro_entradas.pop(patente)  # Remueve la patente después de la salida
+    else:
+        # Registra una nueva entrada
+        print(f"Registrando entrada para la patente: {patente}")
+        registrar_bitacora(vehiculo_id, "entrada")
+        registro_entradas[patente] = tiempo_actual
+
+def imprimir_resultados(resultados, frame):
+    """Imprime los resultados de la consulta y los muestra en la pantalla."""
+    global ultimo_resultado
+
+    if resultados:
+        vehiculo = resultados.get('data')
+        if vehiculo:
+            patente = vehiculo['patente']
+            vehiculo_id = vehiculo['id']
+            manejar_bitacora(patente, vehiculo_id)
+
+            detalles = [
+                f"Patente: {patente}",
+                f"Marca: {vehiculo['marca']}",
+                f"Modelo: {vehiculo['modelo']}",
+                f"Color: {vehiculo['color']}"
+            ]
+
+            # Verifica si es un residente o una visita
+            residente = vehiculo.get('residente')
+            visita = vehiculo.get('visita')
+
+            if isinstance(residente, dict):
+                detalles.extend([
+                    "--- Datos del Residente ---",
+                    f"Nombre: {residente.get('nombre', 'N/A')}",
+                    f"Correo: {residente.get('correo', 'N/A')}",
+                    f"Torre: {residente.get('torre', 'N/A')}",
+                    f"Departamento: {residente.get('departamento', 'N/A')}"
+                ])
+            elif isinstance(visita, dict):
+                detalles.extend([
+                    "--- Datos del Visitante ---",
+                    f"Nombre: {visita.get('nombre', 'N/A')}",
+                    f"Apellido: {visita.get('apellido', 'N/A')}",
+                    f"RUT: {visita.get('rut', 'No disponible')}"
+                ])
+            else:
+                detalles.append("El vehículo no está asociado a un residente ni a una visita.")
+
+            ultimo_resultado = detalles
+
+        else:
+            ultimo_resultado = ["No se encontró información del vehículo."]
+    else:
+        ultimo_resultado = ["No se encontró información del vehículo."]
+
+    # Mostrar la información en la pantalla
+    if ultimo_resultado:
+        cv2.rectangle(frame, (10, 10), (600, 250), (0, 0, 0), -1)
+        y_offset = 30
+        for detalle in ultimo_resultado:
+            cv2.putText(frame, detalle, (15, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
+            y_offset += 25
 
 def main():
-    """Función principal para detectar patentes en tiempo real desde la cámara."""
-    camara = iniciar_camara()
+    """Función principal para capturar video y detectar patentes."""
+    global ultima_patente, ultimo_tiempo
 
-    if not camara:
-        print("Error al iniciar la cámara.")
+    cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+
+    if not cap.isOpened():
+        print("Error al abrir la cámara.")
         return
 
+    print("Iniciando la detección de patentes y consulta a la API...")
+
     while True:
-        frame = leer_frame(camara)
-        if frame is None:
+        ret, frame = cap.read()
+        if not ret:
+            print("No se pudo obtener el frame de la cámara.")
             break
 
         patente = detectar_patente(frame)
 
-        if patente:
+        # Consultar la API cada 5 segundos o cuando se detecte una nueva patente
+        tiempo_actual = time.time()
+        if patente and (patente != ultima_patente or tiempo_actual - ultimo_tiempo > 5):
             print(f"Patente detectada: {patente}")
-            consultar_patente(patente)
+            resultados = consultar_vehiculo(patente)
+            imprimir_resultados(resultados, frame)
+            ultima_patente = patente
+            ultimo_tiempo = tiempo_actual
 
-        mostrar_video(frame)
+        # Muestra un cuadro de estado (verde si hay datos, rojo si no)
+        color_cuadro = (0, 255, 0) if ultimo_resultado and "No se encontró" not in ultimo_resultado[0] else (0, 0, 255)
+        cv2.rectangle(frame, (frame.shape[1] - 70, frame.shape[0] - 70), (frame.shape[1] - 10, frame.shape[0] - 10), color_cuadro, -1)
 
-        # Esperar 3 segundos antes de volver a escanear para evitar repeticiones rápidas
-        time.sleep(3)
+        # Mostrar el frame en tiempo real
+        cv2.imshow('Detección de Patente', frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    liberar_camara(camara)
+    cap.release()
+    cv2.destroyAllWindows()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

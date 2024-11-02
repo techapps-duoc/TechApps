@@ -6,11 +6,12 @@ import re
 # Ruta de Tesseract en tu sistema (asegúrate de tenerlo instalado)
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-# Rango de colores en HSV para blanco, amarillo y naranjo
+# Rango de colores en HSV para blanco, amarillo, naranjo y negro
 COLOR_RANGES = {
     'blanco': ([0, 0, 200], [180, 30, 255]),  # Blanco
     'amarillo': ([20, 100, 100], [30, 255, 255]),  # Amarillo
-    'naranjo': ([10, 100, 100], [20, 255, 255])   # Naranjo
+    'naranjo': ([10, 100, 100], [20, 255, 255]),   # Naranjo
+    'negro': ([0, 0, 0], [180, 255, 50])  # Negro
 }
 
 def filtrar_patente(plate_text):
@@ -18,7 +19,7 @@ def filtrar_patente(plate_text):
     return re.sub(r'[^A-Z0-9]', '', plate_text)
 
 def detectar_color_patente(frame):
-    """Detecta el color predominante de la patente (blanco, amarillo, naranjo)."""
+    """Detecta el color predominante de la patente (blanco, amarillo, naranjo o negro)."""
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     for color, (lower, upper) in COLOR_RANGES.items():
         mask = cv2.inRange(hsv, np.array(lower, dtype=np.uint8), np.array(upper, dtype=np.uint8))
@@ -27,10 +28,12 @@ def detectar_color_patente(frame):
     return None
 
 def preprocesar_imagen(frame):
-    """Convierte la imagen a escala de grises y aplica suavizado."""
+    """Convierte la imagen a escala de grises y aplica suavizado y umbral adaptativo."""
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (5, 5), 0)
-    return blur
+    thresh = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                cv2.THRESH_BINARY, 11, 2)
+    return thresh
 
 def detectar_contornos(frame):
     """Detecta los contornos relevantes en la imagen."""
@@ -42,7 +45,8 @@ def es_patente_contorno(contour):
     """Filtra contornos por tamaño aproximado de una patente."""
     x, y, w, h = cv2.boundingRect(contour)
     aspect_ratio = w / h
-    return 2.0 < aspect_ratio < 5.0 and 300 < w < 370 and 100 < h < 140
+    area = cv2.contourArea(contour)
+    return 2.0 < aspect_ratio < 5.5 and 250 < area < 15000
 
 def extraer_texto_patente(roi):
     """Aplica OCR en la región seleccionada y retorna el texto filtrado."""
