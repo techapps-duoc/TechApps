@@ -31,6 +31,15 @@ public class MultaController {
         return ResponseEntity.ok(multaDtos);
     }
 
+    @GetMapping("/residente/{residenteId}")
+    public ResponseEntity<List<MultaDto>> getMultasPorResidenteId(@PathVariable Long residenteId) {
+        List<Multa> multas = multaService.obtenerMultasPorResidenteId(residenteId);
+        List<MultaDto> multaDtos = multas.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(multaDtos);
+    }
+
     private MultaDto convertToDto(Multa multa) {
         MultaDto dto = new MultaDto();
         dto.setId(multa.getId());
