@@ -1,17 +1,14 @@
 package com.duoc.mscontrol_visitas.model.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
 @Builder
 public class VisitaDto {
-
-    private Integer id;
+    private Long id;
     private String rut;
     private String nombre;
     private String apellido;
-    private String rutResidente;  // Identifica al residente mediante su RUT
+    private ResidenteDto residente; // Incluirá toda la información del residente
 }

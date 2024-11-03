@@ -20,4 +20,6 @@ public interface IResidente {
     List<Residente> listarResidentes();
 
     Optional<Residente> obtenerResidentePorRut(String rut);
+
+
 }
