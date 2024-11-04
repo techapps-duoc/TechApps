@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "519385187996",
+    "project_id": "servicio-scav",
+    "storage_bucket": "servicio-scav.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519385187996:android:a7e242192798b57c4acf59",
+        "android_client_info": {
+          "package_name": "com.duoctechapps.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE7kq4t-iDdv3uUuQ6scDv4YvSKGkdh34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519385187996:android:e094c9fd345df9c24acf59",
+        "android_client_info": {
+          "package_name": "com.scav.techapps_user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE7kq4t-iDdv3uUuQ6scDv4YvSKGkdh34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

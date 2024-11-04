@@ -81,11 +81,11 @@ class BackgroundGeneral extends StatelessWidget {
   } 
 
   BoxDecoration _blueBackground() => const BoxDecoration(
-     gradient: LinearGradient(
+    gradient: LinearGradient(
       colors:[
         Color.fromRGBO(9, 66, 147, 1),
         Color.fromRGBO(63,177,177,1)
       ]   
       )
   );
- }
+}

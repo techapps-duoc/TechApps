@@ -40,7 +40,8 @@ class _HeaderIcon extends StatelessWidget {
       Container(
         width: double.infinity,
         margin: const EdgeInsets.only(top:20),
-        child:const Icon(Icons.person_pin,color: Colors.white, size:150)
+        //child:const Icon(Icons.person_pin,color: Colors.white, size:150)
+        child: Image.asset('assets/usuario.png', width:200.0, height: 200.0),
       )
     );
   }

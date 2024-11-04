@@ -71,7 +71,7 @@ class _LoginForm extends StatelessWidget {
               autocorrect: false,
               keyboardType: TextInputType.emailAddress,
               decoration:  InputDecorations.authInputDecoration(
-               hintText: '',
+              hintText: '',
                 labelText: 'Ingrese Correo',
                 prefixIcon: Icons.alternate_email_rounded
               ),
@@ -93,8 +93,8 @@ class _LoginForm extends StatelessWidget {
             onPressed:(){
               context.go('/detalle_vehiculo_screen');
               //TODO LOGIN FROM
-            }
-             )
+            } 
+            )
               
 
 

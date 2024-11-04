@@ -10,25 +10,24 @@ class InputDecorations {
   }) {
       return InputDecoration(
 
-     
                 enabledBorder: const UnderlineInputBorder(
                   borderSide:  BorderSide(
-                    color:Colors.deepPurple
+                    color:Colors.black
                   ),
                 ),
                 focusedBorder:  const UnderlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.deepPurple,
+                    color: Colors.black,
                     width: 2
                   )
                 ),
                 hintText: hintText,
                 labelText: labelText,
                 labelStyle: const TextStyle(
-                  color:Colors.grey
+                  color:Colors.black
                 ),
                 prefixIcon: prefixIcon != null 
-                ? Icon(prefixIcon, color: Colors.deepPurple)
+                ? Icon(prefixIcon, color: Colors.black)
                 :null
 
              
