@@ -1,4 +1,4 @@
-import cv2 
+import cv2
 import time
 import requests
 import config
@@ -9,7 +9,6 @@ from datetime import datetime
 ultima_patente = None
 ultimo_resultado = None
 ultimo_tiempo = 0
-patentes_registradas = set()  # Conjunto para almacenar patentes ya registradas en la sesión
 
 def consultar_vehiculo(patente):
     """Consulta los datos de un vehículo específico por su patente."""
@@ -29,42 +28,34 @@ def consultar_vehiculo(patente):
         print(f"Error al consultar el vehículo: {e}")
         return None
 
-def registrar_entrada_bitacora(vehiculo):
+def registrar_entrada_bitacora(vehiculo_id):
     """Registra la entrada del vehículo en la bitácora con fecha de entrada y fecha de salida como null."""
-    url = "http://35.226.113.153:30050/api/v2/bitacoras"
+    url = "http://35.226.113.153:30050/api/v2/bitacora"
     headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'x-api-key': config.API_KEY
     }
     data = {
+        "vehiculoId": vehiculo_id,
         "fechain": datetime.now().isoformat(),  # Fecha y hora actuales en formato ISO
-        "fechaout": None,  # Fecha de salida inicializada en null
-        "vehiculo": {
-            "id": vehiculo.get("id"),
-            "patente": vehiculo.get("patente"),
-            "marca": vehiculo.get("marca"),
-            "modelo": vehiculo.get("modelo"),
-            "visita": vehiculo.get("visita"),
-            "residente": vehiculo.get("residente"),
-            "estacionamientoId": vehiculo.get("estacionamientoId")
-        }
+        "fechaout": None  # Fecha de salida inicializada en null
     }
 
-    print("Datos enviados a la bitácora:", data)  # Imprime los datos para depuración
+    # Imprimir los datos enviados para verificar
+    print("Datos enviados a la bitácora:", data)
 
     try:
         response = requests.post(url, json=data, headers=headers)
         response.raise_for_status()
         if response.status_code == 201:
-            print(f"Registro de entrada exitoso para vehículo ID: {vehiculo['id']}")
-            patentes_registradas.add(vehiculo["id"])  # Añade la patente a las registradas
+            print(f"Registro de entrada exitoso para vehículo ID: {vehiculo_id}")
         else:
             print(f"Error al registrar la entrada: {response.status_code} - {response.text}")
     except requests.exceptions.RequestException as e:
         print(f"Error al registrar la entrada en bitácora: {e}")
-        if response is not None:
-            print("Detalles del error:", response.text)  # Muestra el mensaje de error del servidor si existe
+        if response.content:
+            print("Detalles del error:", response.json())
 
 def imprimir_resultados(resultados, frame):
     """Imprime los resultados de la consulta y los muestra en la pantalla."""
@@ -105,9 +96,12 @@ def imprimir_resultados(resultados, frame):
             # Guarda el resultado para mostrarlo de forma persistente
             ultimo_resultado = detalles
 
-            # Registrar la entrada del vehículo en la bitácora si no ha sido registrada
-            if vehiculo.get('id') not in patentes_registradas:
-                registrar_entrada_bitacora(vehiculo)
+            # Registrar la entrada del vehículo en la bitácora
+            vehiculo_id = vehiculo.get('id')
+            if vehiculo_id:
+                registrar_entrada_bitacora(vehiculo_id)
+            else:
+                print("Error: 'vehiculo_id' es None. No se puede registrar en la bitácora.")
 
         else:
             ultimo_resultado = ["No se encontró información del vehículo."]
