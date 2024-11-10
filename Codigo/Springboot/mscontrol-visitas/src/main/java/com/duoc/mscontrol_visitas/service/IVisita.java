@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface IVisita {
     Visita registrarVisita(Visita visita);
-    void editarVisita(Long id, Visita visita);
+    Visita editarVisita(Long id, Visita visita);
     void eliminarVisita(Long id);
     Optional<Visita> buscarPorId(Long id);
     List<Visita> listarTodas();  // Agregar este método

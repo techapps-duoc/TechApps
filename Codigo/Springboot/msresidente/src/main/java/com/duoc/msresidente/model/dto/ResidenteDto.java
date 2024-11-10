@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class ResidenteDto implements Serializable {
 
 
-    private Integer id;
+    private Long id;
     private String rut;
     private String nombre;
     private String apellido;

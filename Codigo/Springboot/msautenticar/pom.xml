@@ -67,11 +67,11 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Spring Boot Starter Mail -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-
 
 		<!-- Microsoft SQL Server Driver -->
 		<dependency>
@@ -102,6 +102,17 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Thymeleaf -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.mail</groupId>
+			<artifactId>jakarta.mail-api</artifactId>
+			<version>2.0.1</version> <!-- O la última versión disponible -->
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -120,5 +131,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

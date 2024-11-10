@@ -1,7 +1,7 @@
 package com.duoc.msresidente.controller;
 
+import com.duoc.msresidente.exception.DuplicateRutException;
 import com.duoc.msresidente.model.dto.ResidenteDto;
-import com.duoc.msresidente.model.entity.ApiResponse;
 import com.duoc.msresidente.model.entity.Residente;
 import com.duoc.msresidente.service.IResidente;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,85 +14,80 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/residente")
 public class ResidenteController {
 
     @Autowired
     private IResidente residenteService;
 
-    @PostMapping("residente")
-    public ResponseEntity<ApiResponse<ResidenteDto>> create(@RequestBody ResidenteDto residenteDto) {
-        Residente residenteSave = residenteService.save(residenteDto);
-        ResidenteDto dto = convertToDto(residenteSave);
-        ApiResponse<ResidenteDto> response = new ApiResponse<>(HttpStatus.CREATED.value(), "Residente creado exitosamente", dto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    // Crear residente
+    @PostMapping("/registrar")
+    public ResponseEntity<ResidenteDto> registrarResidente(@RequestBody ResidenteDto residenteDto) {
+        Residente nuevoResidente = convertToEntity(residenteDto);
+        Residente residenteCreado = residenteService.registrarResidente(nuevoResidente);
+        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDto(residenteCreado));
     }
 
-    @PutMapping("residente")
-    public ResponseEntity<ApiResponse<ResidenteDto>> update(@RequestBody ResidenteDto residenteDto) {
-        Residente residenteUpdate = residenteService.save(residenteDto);
-        ResidenteDto dto = convertToDto(residenteUpdate);
-        ApiResponse<ResidenteDto> response = new ApiResponse<>(HttpStatus.OK.value(), "Residente actualizado exitosamente", dto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    // Editar residente
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<ResidenteDto> editarResidente(@PathVariable Long id, @RequestBody ResidenteDto residenteDto) {
+        Residente residenteActualizado = convertToEntity(residenteDto);
+        Residente residenteEditado = residenteService.editarResidente(id, residenteActualizado);
+        return ResponseEntity.status(HttpStatus.OK).body(convertToDto(residenteEditado));
     }
 
-    @DeleteMapping("residente/{id}")
-    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Integer id) {
+
+    // Eliminar residente
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         Residente residenteDelete = residenteService.findById(id);
         if (residenteDelete == null) {
-            ApiResponse<Void> response = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Residente no encontrado con ID: " + id, null);
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         residenteService.delete(residenteDelete);
-        ApiResponse<Void> response = new ApiResponse<>(HttpStatus.NO_CONTENT.value(), "Residente eliminado exitosamente", null);
-        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("residente/{id}")
-    public ResponseEntity<ApiResponse<ResidenteDto>> showById(@PathVariable Integer id) {
-        Residente residente = residenteService.findById(id);
-        if (residente == null) {
-            ApiResponse<ResidenteDto> response = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Residente no encontrado con ID: " + id, null);
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-        ResidenteDto dto = convertToDto(residente);
-        ApiResponse<ResidenteDto> response = new ApiResponse<>(HttpStatus.OK.value(), "Residente encontrado", dto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("residentes")
-    public ResponseEntity<ApiResponse<List<ResidenteDto>>> findAll() {
+    // Listar todos los residentes
+    @GetMapping("/listar")
+    public ResponseEntity<List<ResidenteDto>> findAll() {
         List<ResidenteDto> residentes = StreamSupport.stream(residenteService.findAll().spliterator(), false)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
-        ApiResponse<List<ResidenteDto>> response = new ApiResponse<>(HttpStatus.OK.value(), "Lista de residentes", residentes);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(residentes);
     }
 
-    @GetMapping("residente/rut/{rut}")
-    public ResponseEntity<ApiResponse<ResidenteDto>> findByRut(@PathVariable String rut) {
+    // Obtener residente por ID
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<ResidenteDto> showById(@PathVariable Long id) {
+        Residente residente = residenteService.findById(id);
+        if (residente == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(convertToDto(residente));
+    }
+
+    // Buscar residente por RUT
+    @GetMapping("/buscar/rut/{rut}")
+    public ResponseEntity<ResidenteDto> findByRut(@PathVariable String rut) {
         Residente residente = residenteService.findByRut(rut);
         if (residente == null) {
-            ApiResponse<ResidenteDto> response = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Residente no encontrado con RUT: " + rut, null);
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        ResidenteDto dto = convertToDto(residente);
-        ApiResponse<ResidenteDto> response = new ApiResponse<>(HttpStatus.OK.value(), "Residente encontrado", dto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(convertToDto(residente));
     }
 
-    @GetMapping("residente/torre/{torre}/departamento/{departamento}")
-    public ResponseEntity<ApiResponse<Integer>> findByTorreAndDepartamento(@PathVariable Integer torre, @PathVariable Integer departamento) {
+    // Buscar residente por torre y departamento
+    @GetMapping("/buscar/torre/{torre}/departamento/{departamento}")
+    public ResponseEntity<Long> findByTorreAndDepartamento(@PathVariable Integer torre, @PathVariable Integer departamento) {
         Residente residente = residenteService.findByTorreAndDepartamento(torre, departamento);
         if (residente == null) {
-            ApiResponse<Integer> response = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Residente no encontrado en la torre " + torre + " y departamento " + departamento, null);
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        ApiResponse<Integer> response = new ApiResponse<>(HttpStatus.OK.value(), "Residente encontrado", residente.getId());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(residente.getId());
     }
 
-
+    // Método para convertir Residente a ResidenteDto
     private ResidenteDto convertToDto(Residente residente) {
         return ResidenteDto.builder()
                 .id(residente.getId())
@@ -102,6 +97,18 @@ public class ResidenteController {
                 .correo(residente.getCorreo())
                 .torre(residente.getTorre())
                 .departamento(residente.getDepartamento())
+                .build();
+    }
+
+    // Método para convertir ResidenteDto a Residente
+    private Residente convertToEntity(ResidenteDto residenteDto) {
+        return Residente.builder()
+                .rut(residenteDto.getRut())
+                .nombre(residenteDto.getNombre())
+                .apellido(residenteDto.getApellido())
+                .correo(residenteDto.getCorreo())
+                .torre(residenteDto.getTorre())
+                .departamento(residenteDto.getDepartamento())
                 .build();
     }
 }

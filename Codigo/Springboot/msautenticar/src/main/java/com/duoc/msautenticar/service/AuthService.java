@@ -4,11 +4,14 @@ import com.duoc.msautenticar.model.entity.Usuario;
 import com.duoc.msautenticar.model.dao.UsuarioDao;
 import com.duoc.msautenticar.security.JwtUtil;
 import io.jsonwebtoken.Claims;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -54,24 +57,5 @@ public class AuthService {
         return true;
     }
 
-    public String recoverPassword(String username) {
-        Usuario usuario = usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-
-        // Obtener el correo del residente asociado al usuario
-        String correo = usuario.getResidente().getCorreo();
-
-        // Generar una nueva contraseña temporal
-        String temporaryPassword = UUID.randomUUID().toString().substring(0, 8);
-        usuario.setPasswd(temporaryPassword);
-        usuarioRepository.save(usuario);
-
-        // Enviar correo al usuario con la nueva contraseña temporal
-        String emailText = "Hola, " + usuario.getUsername() +
-                ". Tu nueva contraseña temporal es: " + temporaryPassword;
-        emailService.sendSimpleEmail(correo, "Recuperación de Contraseña", emailText);
-
-        return temporaryPassword;
-    }
 
 }

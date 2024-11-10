@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -57,7 +58,7 @@ public class AuthController {
     }
 
     @PostMapping("/recover-password")
-    public String recoverPassword(@RequestBody Map<String, String> request) {
+    public ResponseEntity<String> recoverPassword(@RequestBody Map<String, String> request) {
         String username = request.get("username");
         Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
@@ -67,13 +68,24 @@ public class AuthController {
         usuario.setPasswd(temporaryPassword);
         usuarioRepository.save(usuario);
 
-        // Enviar correo al usuario con la nueva contraseña temporal
-        String emailText = "Hola, " + usuario.getUsername() +
-                ". Tu nueva contraseña temporal es: " + temporaryPassword;
-        emailService.sendSimpleEmail(usuario.getResidente().getCorreo(), "Recuperación de Contraseña", emailText);
+        // Preparar datos para la plantilla
+        Map<String, Object> templateData = new HashMap<>();
+        templateData.put("name", usuario.getResidente().getNombre());
+        templateData.put("temporaryPassword", temporaryPassword);
 
-        return temporaryPassword;
+        // Enviar correo al usuario con la nueva contraseña temporal usando plantilla HTML
+        emailService.sendHtmlEmail(
+                usuario.getResidente().getCorreo(),
+                "Recuperación de Contraseña",
+                "passwd", templateData
+
+        );
+
+        // Devolver una respuesta adecuada sin incluir la contraseña
+        return ResponseEntity.ok("Se ha enviado un correo electrónico con instrucciones para restablecer la contraseña.");
     }
+
+
 
 
 }

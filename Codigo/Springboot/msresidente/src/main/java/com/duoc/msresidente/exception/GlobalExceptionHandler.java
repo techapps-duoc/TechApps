@@ -15,6 +15,16 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(DuplicateRutException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicateRutException(DuplicateRutException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.CONFLICT.value());
+        response.put("error", "Conflict");
+        response.put("message", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);  // Asegura que aquí también uses CONFLICT
+    }
+
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<?> handleDataAccessException(DataAccessException ex, WebRequest request) {
         Map<String, Object> response = new HashMap<>();
@@ -44,4 +54,9 @@ public class GlobalExceptionHandler {
         response.put("message", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+
+
+
 }
