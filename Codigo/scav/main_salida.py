@@ -2,8 +2,18 @@ import cv2
 import time
 import requests
 import config
-from detectarPatente import detectar_patente  # Importa la función desde detectarPatente.py
+from detectarPatente import detectar_patente
+from arduino_control import ArduinoControl
 from datetime import datetime
+
+
+# Inicializar conexión con Arduino
+try:
+    arduino = ArduinoControl(port='COM6')
+except Exception as e:
+    print(f"Error al conectar con Arduino: {e}")
+    arduino = None
+
 
 # Variables globales para la última patente detectada y resultados
 ultima_patente = None
