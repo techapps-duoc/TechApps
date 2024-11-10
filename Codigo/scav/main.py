@@ -3,6 +3,7 @@ import time
 import requests
 import config
 from detectarPatente import detectar_patente  # Importa la función desde detectarPatente.py
+from datetime import datetime
 
 # Variables globales para la última patente y resultados
 ultima_patente = None
@@ -27,6 +28,35 @@ def consultar_vehiculo(patente):
         print(f"Error al consultar el vehículo: {e}")
         return None
 
+def registrar_entrada_bitacora(vehiculo_id):
+    """Registra la entrada del vehículo en la bitácora con fecha de entrada y fecha de salida como null."""
+    url = "http://35.226.113.153:30050/api/v2/bitacora"
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-api-key': config.API_KEY
+    }
+    data = {
+        "vehiculoId": vehiculo_id,
+        "fechain": datetime.now().isoformat(),  # Fecha y hora actuales en formato ISO
+        "fechaout": None  # Fecha de salida inicializada en null
+    }
+
+    # Imprimir los datos enviados para verificar
+    print("Datos enviados a la bitácora:", data)
+
+    try:
+        response = requests.post(url, json=data, headers=headers)
+        response.raise_for_status()
+        if response.status_code == 201:
+            print(f"Registro de entrada exitoso para vehículo ID: {vehiculo_id}")
+        else:
+            print(f"Error al registrar la entrada: {response.status_code} - {response.text}")
+    except requests.exceptions.RequestException as e:
+        print(f"Error al registrar la entrada en bitácora: {e}")
+        if response.content:
+            print("Detalles del error:", response.json())
+
 def imprimir_resultados(resultados, frame):
     """Imprime los resultados de la consulta y los muestra en la pantalla."""
     global ultimo_resultado
@@ -36,10 +66,9 @@ def imprimir_resultados(resultados, frame):
         if vehiculo:
             # Datos del vehículo
             detalles = [
-                f"Patente: {vehiculo['patente']}",
-                f"Marca: {vehiculo['marca']}",
-                f"Modelo: {vehiculo['modelo']}",
-                f"Color: {vehiculo['color']}"
+                f"Patente: {vehiculo.get('patente', 'N/A')}",
+                f"Marca: {vehiculo.get('marca', 'N/A')}",
+                f"Modelo: {vehiculo.get('modelo', 'N/A')}",
             ]
 
             # Verifica si es un residente o una visita
@@ -66,6 +95,13 @@ def imprimir_resultados(resultados, frame):
 
             # Guarda el resultado para mostrarlo de forma persistente
             ultimo_resultado = detalles
+
+            # Registrar la entrada del vehículo en la bitácora
+            vehiculo_id = vehiculo.get('id')
+            if vehiculo_id:
+                registrar_entrada_bitacora(vehiculo_id)
+            else:
+                print("Error: 'vehiculo_id' es None. No se puede registrar en la bitácora.")
 
         else:
             ultimo_resultado = ["No se encontró información del vehículo."]
