@@ -5,7 +5,9 @@ a cambiar es la sig.
 cambiar ruta en detectarPatente.py
 pytesseract.pytesseract.tesseract_cmd = r'C:\ruta\a\tesseract.exe'
 
-En cmd para conectar arduino
+En cmd p
+pip install requests
+
 pip install pyserial    
 en el ide revisa el puerto COM segun numero q corresponda entrada 
 t cambia el  Python (arduino_control.py, main_entrada.py, o main_salida.py).
