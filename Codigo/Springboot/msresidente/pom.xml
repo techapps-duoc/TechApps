@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.duoc</groupId>
 	<artifactId>msresidente</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>msresidente</name>
 	<description>microservicio para consultar datos de residentes</description>
 	<url/>
@@ -97,6 +97,11 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.5.4</version> <!-- This is compatible with PostgreSQL 16; adjust as needed -->
 		</dependency>
 	</dependencies>
 

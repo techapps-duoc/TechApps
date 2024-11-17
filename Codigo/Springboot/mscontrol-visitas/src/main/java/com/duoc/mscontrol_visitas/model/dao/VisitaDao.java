@@ -7,5 +7,4 @@ import java.util.Optional;
 
 public interface VisitaDao extends JpaRepository<Visita, Long> {
     Optional<Visita> findByRut(String rut); // Método para buscar una visita por su RUT
-
 }

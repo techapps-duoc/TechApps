@@ -16,10 +16,18 @@ public class JwtUtil {
     // Decodificar la clave y convertirla a tipo Key
     private static final Key SECRET_KEY = Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET));    private static final long EXPIRATION_TIME = 86400000; // 1 día
 
-    public static String generateToken(String username, int userType) {
+    public static String generateToken(String username, int userType, Long residenteId,String rut, String nombre, String apellido, String correo, int torre, int departamento) {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role", userType)
+                .claim("username", username)
+                .claim("id", residenteId)
+                .claim("rut", rut)
+                .claim("nombre", nombre)
+                .claim("apellido", apellido)
+                .claim("correo", correo)
+                .claim("torre", torre)
+                .claim("departamento", departamento)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SECRET_KEY) // Usando la clave generada

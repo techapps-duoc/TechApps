@@ -21,4 +21,7 @@ public interface IVehiculo {
     List<Vehiculo> obtenerVehiculosDeResidentes();
 
     List<Vehiculo> obtenerVehiculosDeVisitas();
+
+    Vehiculo buscarVehiculoPorVisitaId(Long visitaId);
+
 }

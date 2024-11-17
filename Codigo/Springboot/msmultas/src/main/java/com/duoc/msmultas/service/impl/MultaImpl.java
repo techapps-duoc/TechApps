@@ -1,5 +1,12 @@
 package com.duoc.msmultas.service.impl;
 
+import com.duoc.msmultas.model.dao.RegistroVisitasDao;
+import com.duoc.msmultas.model.dto.BitacoraDto;
+import com.duoc.msmultas.model.dto.MultaDto;
+import com.duoc.msmultas.model.dto.ResidenteDto;
+import com.duoc.msmultas.model.dto.VehiculoDto;
+import com.duoc.msmultas.model.entity.RegistroVisitas;
+import com.duoc.msmultas.model.entity.Vehiculo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -29,6 +37,8 @@ public class MultaImpl implements IMulta {
 
     private final BitacoraDao bitacoraRepository;
     private final MultaDao multaRepository;
+    private final RegistroVisitasDao registroVisitasRepository;
+
 
     @Value("${msmultas.limiteHoras}")
     private int limiteHoras;
@@ -39,13 +49,13 @@ public class MultaImpl implements IMulta {
     @Value("${msmultas.valorUF}")
     private double valorUF;
 
-    public MultaImpl(BitacoraDao bitacoraRepository, MultaDao multaRepository) {
+    public MultaImpl(BitacoraDao bitacoraRepository, MultaDao multaRepository,RegistroVisitasDao registroVisitasRepository) {
         this.bitacoraRepository = bitacoraRepository;
         this.multaRepository = multaRepository;
+        this.registroVisitasRepository = registroVisitasRepository;
     }
 
     // Tarea programada para revisar y aplicar multas usando el cron configurado
-    @Override
     @Scheduled(cron = "${msmultas.cron}")
     public void revisarMultas() {
         LocalDateTime inicioDiaAnterior = LocalDateTime.now().minusDays(1).with(LocalTime.MIN);
@@ -57,25 +67,36 @@ public class MultaImpl implements IMulta {
         List<Bitacora> bitacoras = bitacoraRepository.findEntriesForVisitasWithinPeriod(inicioDiaAnterior, finDiaAnterior);
 
         for (Bitacora bitacora : bitacoras) {
-            if (bitacora.getVehiculo().getVisita() != null && bitacora.getVehiculo().getVisita().getResidente() != null) {
-                Duration duracion = Duration.between(bitacora.getFechaIn(), bitacora.getFechaOut());
-                long horasEnCondominio = duracion.toHours();
+            if (bitacora.getVehiculo().getVisita() != null) {
+                Long visitaId = bitacora.getVehiculo().getVisita().getId();
 
-                if (horasEnCondominio > limiteHoras) {
-                    long horasExcedidas = horasEnCondominio - limiteHoras;
-                    double multaTotalCLP = (costoMultaUF * valorUF) * horasExcedidas;
+                // Obtener el registro de visita más reciente en el período de la bitácora
+                RegistroVisitas registroVisita = registroVisitasRepository.findRegistroForVisitaAndPeriodo(visitaId,
+                        bitacora.getFechaIn(), bitacora.getFechaOut());
 
-                    Multa multa = new Multa();
-                    multa.setBitacora(bitacora);
-                    multa.setTotalDeuda((int) multaTotalCLP);
+                if (registroVisita != null) {
+                    Duration duracion = Duration.between(bitacora.getFechaIn(), bitacora.getFechaOut());
+                    long horasEnCondominio = duracion.toHours();
 
-                    multaRepository.save(multa);
+                    if (horasEnCondominio > limiteHoras) {
+                        long horasExcedidas = horasEnCondominio - limiteHoras;
+                        double multaTotalCLP = (costoMultaUF * valorUF) * horasExcedidas;
 
-                    logger.info("Multa aplicada: Vehículo con ID {} (visita del residente ID {}). Horas en condominio: {}. Horas excedidas: {}. Multa total en CLP: {}.",
-                            bitacora.getVehiculo().getId(), bitacora.getVehiculo().getVisita().getResidente().getId(),
-                            horasEnCondominio, horasExcedidas, multaTotalCLP);
+                        Multa multa = new Multa();
+                        multa.setBitacora(bitacora);
+                        multa.setTotalDeuda((int) multaTotalCLP);
+                        multa.setFechaMulta(LocalDateTime.now());
+
+                        multaRepository.save(multa);
+
+                        logger.info("Multa aplicada: Vehículo con ID {} (visita del residente ID {}). Horas en condominio: {}. Horas excedidas: {}. Multa total en CLP: {}.",
+                                bitacora.getVehiculo().getId(), registroVisita.getResidente().getId(),
+                                horasEnCondominio, horasExcedidas, multaTotalCLP);
+                    } else {
+                        logger.info("Vehículo con ID {} no excedió el tiempo permitido. Horas en condominio: {}.", bitacora.getVehiculo().getId(), horasEnCondominio);
+                    }
                 } else {
-                    logger.info("Vehículo con ID {} no excedió el tiempo permitido. Horas en condominio: {}.", bitacora.getVehiculo().getId(), horasEnCondominio);
+                    logger.warn("No se encontró un registro de visita válido para el vehículo con ID {} en el período especificado.", bitacora.getVehiculo().getId());
                 }
             }
         }
@@ -103,13 +124,20 @@ public class MultaImpl implements IMulta {
         }
     }
 
-    @Override
     public List<Multa> obtenerTodasLasMultas() {
         return multaRepository.findAll();
     }
 
     @Override
-    public List<Multa> obtenerMultasPorResidenteId(Long residenteId) {
-        return multaRepository.findByBitacoraVehiculoVisitaResidenteId(residenteId);
+    public List<Multa> obtenerMultasUltimoMes() {
+        LocalDateTime fechaInicio = LocalDate.now().minusMonths(1).atStartOfDay();
+        return multaRepository.findMultasUltimoMes(fechaInicio);
     }
+
+    @Override
+    public List<Multa> findMultasPorResidenteId(Long residenteId) {
+        return multaRepository.findByResidenteId(residenteId);
+    }
+
+
 }

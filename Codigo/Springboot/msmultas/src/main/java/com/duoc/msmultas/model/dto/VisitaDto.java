@@ -8,5 +8,4 @@ public class VisitaDto {
     private String rut;
     private String nombre;
     private String apellido;
-    private ResidenteDto residente; // ID del residente asociado
 }

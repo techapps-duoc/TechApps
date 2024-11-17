@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>com.duoc</groupId>
 	<artifactId>msmultas</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>msmultas</name>
-	<description>Proyecto para autenticar usuarios en servicio scav</description>
+	<description>Proyecto para generar multas automaticas en servicio scav</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -102,6 +102,11 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.15.2</version> <!-- Verifica que sea compatible con tu versión de Spring Boot -->
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.5.4</version> <!-- This is compatible with PostgreSQL 16; adjust as needed -->
 		</dependency>
 	</dependencies>
 

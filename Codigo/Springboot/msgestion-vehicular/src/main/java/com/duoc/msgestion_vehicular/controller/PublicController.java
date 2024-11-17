@@ -1,12 +1,11 @@
 package com.duoc.msgestion_vehicular.controller;
 
 import com.duoc.msgestion_vehicular.config.ApiConfig;
+import com.duoc.msgestion_vehicular.model.dto.BitacoraDto;
 import com.duoc.msgestion_vehicular.model.dto.ResidenteDto;
 import com.duoc.msgestion_vehicular.model.dto.VehiculoDto;
-import com.duoc.msgestion_vehicular.model.entity.ApiResponse;
-import com.duoc.msgestion_vehicular.model.entity.Residente;
-import com.duoc.msgestion_vehicular.model.entity.Vehiculo;
-import com.duoc.msgestion_vehicular.model.entity.Visita;
+import com.duoc.msgestion_vehicular.model.entity.*;
+import com.duoc.msgestion_vehicular.service.IBitacora;
 import com.duoc.msgestion_vehicular.service.IResidente;
 import com.duoc.msgestion_vehicular.service.IVehiculo;
 import com.duoc.msgestion_vehicular.service.IVisita;
@@ -18,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,6 +36,9 @@ public class PublicController {
 
     @Autowired
     private ApiConfig apiConfig;
+
+    @Autowired
+    private IBitacora bitacoraService;
 
     // Buscar vehículo por patente y traer datos del residente o visita
     @GetMapping("vehiculo/patente/{patente}")
@@ -103,6 +106,39 @@ public class PublicController {
         return ResponseEntity.ok(responseData);
     }
 
+    @PostMapping("bitacora")
+    public ResponseEntity<Bitacora> createBitacora(@RequestBody BitacoraDto bitacoraDto) {
+        Bitacora savedBitacora = bitacoraService.save(bitacoraDto);
+        return new ResponseEntity<>(savedBitacora, HttpStatus.CREATED);
+    }
+
+    @GetMapping("bitacora/{id}")
+    public ResponseEntity<Bitacora> getBitacoraById(@PathVariable Long id) {
+        Optional<Bitacora> bitacora = bitacoraService.findById(id);
+        return bitacora.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("bitacoras")
+    public ResponseEntity<List<Bitacora>> getAllBitacoras() {
+        List<Bitacora> bitacoras = bitacoraService.findAll();
+        return new ResponseEntity<>(bitacoras, HttpStatus.OK);
+    }
+
+    @DeleteMapping("bitacora/{id}")
+    public ResponseEntity<Void> deleteBitacora(@PathVariable Long id) {
+        bitacoraService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("bitacora/salida/{vehiculoId}")
+    public ResponseEntity<Bitacora> registrarSalidaVehiculo(
+            @PathVariable Long vehiculoId,
+            @RequestParam(required = false) LocalDateTime fechaSalida) {
+        Bitacora bitacoraActualizada = bitacoraService.registrarSalidaVehiculo(vehiculoId, fechaSalida);
+        return ResponseEntity.ok(bitacoraActualizada);
+    }
+
     // Conversión de vehículo a DTO
     private VehiculoDto convertToDto(Vehiculo vehiculo) {
         return VehiculoDto.builder()
@@ -110,8 +146,6 @@ public class PublicController {
                 .patente(vehiculo.getPatente())
                 .marca(vehiculo.getMarca())
                 .modelo(vehiculo.getModelo())
-                .anio(vehiculo.getAnio())
-                .color(vehiculo.getColor())
                 .visitaId(vehiculo.getVisita() != null ? vehiculo.getVisita().getId() : null)
                 .residenteId(vehiculo.getResidente() != null ? vehiculo.getResidente().getId() : null)
                 .build();
@@ -123,8 +157,6 @@ public class PublicController {
         data.put("patente", vehiculo.getPatente());
         data.put("marca", vehiculo.getMarca());
         data.put("modelo", vehiculo.getModelo());
-        data.put("anio", vehiculo.getAnio());
-        data.put("color", vehiculo.getColor());
         data.put("estacionamiento_id", vehiculo.getEstacionamientoId());
 
         // Verificar si el vehículo tiene un residente asociado
@@ -173,7 +205,6 @@ public class PublicController {
             vehicleData.put("patente", root.path("plate").asText());
             vehicleData.put("marca", root.path("make").asText());
             vehicleData.put("modelo", root.path("model").asText());
-            vehicleData.put("anio", root.path("year").asInt());
 
             // Obtener los datos del propietario
             JsonNode ownerNode = root.path("owner");
@@ -186,13 +217,11 @@ public class PublicController {
                 String firstName = nameParts.length > 0 ? nameParts[0] : "";
                 String lastName = nameParts.length > 1 ? String.join(" ", Arrays.copyOfRange(nameParts, 2, nameParts.length)) : "";
 
-                // Eliminar el guion del RUT
-                String rutSinGuion = rut.replace("-", "");
 
                 // Añadir los datos procesados al mapa
                 vehicleData.put("primer_nombre", firstName);
                 vehicleData.put("apellidos", lastName);
-                vehicleData.put("rut", rutSinGuion);
+                vehicleData.put("rut", rut);
             }
         } catch (Exception e) {
             e.printStackTrace();

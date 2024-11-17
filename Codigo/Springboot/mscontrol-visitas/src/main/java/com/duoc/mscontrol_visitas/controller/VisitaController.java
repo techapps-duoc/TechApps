@@ -50,6 +50,16 @@ public class VisitaController {
         return ResponseEntity.ok(visitaDtos); // Devuelve la lista de visitas en formato DTO
     }
 
+    @GetMapping("/buscar/{rut}")
+    public ResponseEntity<VisitaDto> buscarVisitaPorRut(@PathVariable String rut) {
+        Visita visita = visitaService.buscarPorRut(rut);
+        if (visita != null) {
+            return ResponseEntity.ok(convertVisitaToDto(visita));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     // Editar visita
     @PutMapping("/editar/{id}")
     public ResponseEntity<VisitaDto> editarVisita(@PathVariable Long id, @RequestBody VisitaDto visitaDto) {
@@ -101,6 +111,18 @@ public class VisitaController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(autorizacionDtos);
     }
+
+    // En VisitaController.java
+    @GetMapping("/autorizaciones/pendientes/residente/{residenteId}")
+    public ResponseEntity<List<AutorizacionDto>> listarAutorizacionesPendientesPorResidente(@PathVariable Long residenteId) {
+        List<Autorizacion> autorizacionesPendientes = autorizacionService.listarAutorizacionesPendientesPorResidente(residenteId);
+        List<AutorizacionDto> autorizacionDtos = autorizacionesPendientes.stream()
+                .map(this::convertAutorizacionToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(autorizacionDtos);
+    }
+
+
 
     // Convertir VisitaDto a Visita
     private Visita convertVisitaDtoToEntity(VisitaDto visitaDto) {

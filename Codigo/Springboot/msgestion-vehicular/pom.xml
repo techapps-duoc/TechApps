@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.duoc</groupId>
 	<artifactId>msgestion-vehicular</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>msgestion-vehicular</name>
 	<description>Proyecto para gestion vehicular en servicio scav</description>
 	<url/>
@@ -97,6 +97,11 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.5.4</version> <!-- This is compatible with PostgreSQL 16; adjust as needed -->
 		</dependency>
 	</dependencies>
 

@@ -22,12 +22,6 @@ public class Vehiculo {
     @Column(name = "modelo", nullable = false, length = 50)
     private String modelo;
 
-    @Column(name = "anio", nullable = false)
-    private int anio;
-
-    @Column(name = "color", nullable = false, length = 25)
-    private String color;
-
     @ManyToOne
     @JoinColumn(name = "visita_id", referencedColumnName = "id")
     private Visita visita;
@@ -36,6 +30,6 @@ public class Vehiculo {
     @JoinColumn(name = "residente_id", referencedColumnName = "id")
     private Residente residente;
 
-    @Column(name = "estacionamiento_id", nullable = false)
+    @Column(name = "estacionamiento_id")
     private Long estacionamientoId;
 }

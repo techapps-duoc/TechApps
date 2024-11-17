@@ -15,5 +15,4 @@ public class VisitaDto {
     private String rut;
     private String nombre;
     private String apellido;
-    private Integer residenteId;
 }

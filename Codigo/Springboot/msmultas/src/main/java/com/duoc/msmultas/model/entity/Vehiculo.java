@@ -17,8 +17,6 @@ public class Vehiculo {
 
     private String marca;
     private String modelo;
-    private int anio;
-    private String color;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "visita_id")

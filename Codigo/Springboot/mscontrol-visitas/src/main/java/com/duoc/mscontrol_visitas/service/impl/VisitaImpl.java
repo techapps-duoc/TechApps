@@ -63,4 +63,9 @@ public class VisitaImpl implements IVisita {
     public List<Visita> listarTodas() {  // Implementación del método
         return visitaRepository.findAll();
     }
+
+    @Override
+    public Visita buscarPorRut(String rut) {
+        return visitaRepository.findByRut(rut).orElse(null);
+    }
 }

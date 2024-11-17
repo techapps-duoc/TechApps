@@ -27,8 +27,4 @@ public class Visita implements Serializable {
     @Column(name = "apellido", nullable = false, length = 25)
     private String apellido;
 
-    @ManyToOne
-    @JoinColumn(name = "residente_id", referencedColumnName = "id")
-    private Residente residente;
-
 }

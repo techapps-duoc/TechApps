@@ -79,12 +79,12 @@ public class ResidenteController {
 
     // Buscar residente por torre y departamento
     @GetMapping("/buscar/torre/{torre}/departamento/{departamento}")
-    public ResponseEntity<Long> findByTorreAndDepartamento(@PathVariable Integer torre, @PathVariable Integer departamento) {
+    public ResponseEntity<ResidenteDto> findByTorreAndDepartamento(@PathVariable Integer torre, @PathVariable Integer departamento) {
         Residente residente = residenteService.findByTorreAndDepartamento(torre, departamento);
         if (residente == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return ResponseEntity.ok(residente.getId());
+        return ResponseEntity.ok(convertToDto(residente));
     }
 
     // Método para convertir Residente a ResidenteDto

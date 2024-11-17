@@ -1,20 +1,14 @@
 package com.duoc.msautenticar.controller;
 
 import com.duoc.msautenticar.model.dao.UsuarioDao;
-import com.duoc.msautenticar.model.entity.AuthRequest;
-import com.duoc.msautenticar.model.entity.AuthResponse;
-import com.duoc.msautenticar.model.entity.ChangePasswordRequest;
-import com.duoc.msautenticar.model.entity.Usuario;
+import com.duoc.msautenticar.model.entity.*;
 import com.duoc.msautenticar.service.AuthService;
 import com.duoc.msautenticar.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,6 +77,36 @@ public class AuthController {
 
         // Devolver una respuesta adecuada sin incluir la contraseña
         return ResponseEntity.ok("Se ha enviado un correo electrónico con instrucciones para restablecer la contraseña.");
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
+        try {
+            Usuario usuario = authService.register(
+                    registerRequest.getUsername(),
+                    registerRequest.getPasswd(),
+                    registerRequest.getResidenteId(),
+                    registerRequest.getTipo()
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado con éxito: " + usuario.getUsername());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al registrar el usuario: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/eliminar/{username}")
+    public ResponseEntity<String> deleteUsuario(@PathVariable String username) {
+        try {
+            authService.eliminarUsuario(username);
+            return ResponseEntity.ok("Usuario eliminado correctamente.");
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar el usuario: " + e.getMessage());
+        }
     }
 
 

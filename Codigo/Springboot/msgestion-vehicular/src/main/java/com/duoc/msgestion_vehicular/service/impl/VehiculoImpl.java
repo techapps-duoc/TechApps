@@ -32,8 +32,6 @@ public class VehiculoImpl implements IVehiculo {
         vehiculo.setPatente(vehiculoDto.getPatente());
         vehiculo.setMarca(vehiculoDto.getMarca());
         vehiculo.setModelo(vehiculoDto.getModelo());
-        vehiculo.setAnio(vehiculoDto.getAnio());
-        vehiculo.setColor(vehiculoDto.getColor());
 
         // Asignar Residente
         if (vehiculoDto.getResidenteId() != null) {
@@ -52,6 +50,11 @@ public class VehiculoImpl implements IVehiculo {
         }
 
         return vehiculoRepository.save(vehiculo);
+    }
+
+    @Override
+    public Vehiculo buscarVehiculoPorVisitaId(Long visitaId) {
+        return vehiculoRepository.findByVisitaId(visitaId);
     }
 
     @Override

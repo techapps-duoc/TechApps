@@ -1,51 +1,62 @@
 package com.duoc.msmultas.service.impl;
 
+import com.duoc.msmultas.model.dao.RegistroVisitasDao;
 import com.duoc.msmultas.model.dto.ResidenteDto;
 import com.duoc.msmultas.model.dto.VehiculoDto;
 import com.duoc.msmultas.model.dto.VisitaDto;
-import com.duoc.msmultas.model.entity.Vehiculo;
+import com.duoc.msmultas.model.entity.Bitacora;
 import com.duoc.msmultas.service.IVehiculo;
+import com.duoc.msmultas.model.entity.RegistroVisitas;
+import com.duoc.msmultas.model.entity.Vehiculo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VehiculoImpl implements IVehiculo {
 
+    private final RegistroVisitasDao registroVisitasDao;
+
+    @Autowired
+    public VehiculoImpl(RegistroVisitasDao registroVisitasDao) {
+        this.registroVisitasDao = registroVisitasDao;
+    }
+
     @Override
-    public VehiculoDto convertToDto(Vehiculo vehiculo) {
+    public VehiculoDto convertToDto(Vehiculo vehiculo, Bitacora bitacora) {
         VehiculoDto vehiculoDto = new VehiculoDto();
         vehiculoDto.setId(vehiculo.getId());
         vehiculoDto.setPatente(vehiculo.getPatente());
         vehiculoDto.setMarca(vehiculo.getMarca());
         vehiculoDto.setModelo(vehiculo.getModelo());
-        vehiculoDto.setAnio(vehiculo.getAnio());
-        vehiculoDto.setColor(vehiculo.getColor());
         vehiculoDto.setEstacionamientoId(vehiculo.getEstacionamientoId());
 
-        // Convertir y asignar VisitaDto si existe
+        // Asignar detalles de la visita si existen
         if (vehiculo.getVisita() != null) {
             VisitaDto visitaDto = new VisitaDto();
             visitaDto.setId(vehiculo.getVisita().getId());
             visitaDto.setRut(vehiculo.getVisita().getRut());
             visitaDto.setNombre(vehiculo.getVisita().getNombre());
             visitaDto.setApellido(vehiculo.getVisita().getApellido());
-
-            // Asignar ResidenteDto si la visita tiene un residente asociado
-            if (vehiculo.getVisita().getResidente() != null) {
-                ResidenteDto residenteDto = new ResidenteDto();
-                residenteDto.setId(vehiculo.getVisita().getResidente().getId());
-                residenteDto.setRut(vehiculo.getVisita().getResidente().getRut());
-                residenteDto.setNombre(vehiculo.getVisita().getResidente().getNombre());
-                residenteDto.setApellido(vehiculo.getVisita().getResidente().getApellido());
-                residenteDto.setCorreo(vehiculo.getVisita().getResidente().getCorreo());
-                residenteDto.setTorre(vehiculo.getVisita().getResidente().getTorre());
-                residenteDto.setDepartamento(vehiculo.getVisita().getResidente().getDepartamento());
-                visitaDto.setResidente(residenteDto); // Asigna el ResidenteDto al VisitaDto
-            }
-
             vehiculoDto.setVisita(visitaDto);
+
+            // Buscar el registro de visita y asociar el residente
+            RegistroVisitas registro = registroVisitasDao.findRegistroForVisitaAndPeriodo(
+                    vehiculo.getVisita().getId(), bitacora.getFechaIn(), bitacora.getFechaOut());
+
+            if (registro != null) {
+                ResidenteDto residenteDto = new ResidenteDto();
+                residenteDto.setId(registro.getResidente().getId());
+                residenteDto.setRut(registro.getResidente().getRut());
+                residenteDto.setNombre(registro.getResidente().getNombre());
+                residenteDto.setApellido(registro.getResidente().getApellido());
+                residenteDto.setCorreo(registro.getResidente().getCorreo());
+                residenteDto.setTorre(registro.getResidente().getTorre());
+                residenteDto.setDepartamento(registro.getResidente().getDepartamento());
+
+            }
         }
 
-        // Convertir y asignar ResidenteDto si existe
+        // Asignar residente al vehículo si existe
         if (vehiculo.getResidente() != null) {
             ResidenteDto residenteDto = new ResidenteDto();
             residenteDto.setId(vehiculo.getResidente().getId());

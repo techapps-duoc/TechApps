@@ -10,4 +10,6 @@ public interface IVisita {
     void eliminarVisita(Long id);
     Optional<Visita> buscarPorId(Long id);
     List<Visita> listarTodas();  // Agregar este método
+    public Visita buscarPorRut(String rut);
+
 }

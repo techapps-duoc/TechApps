@@ -12,9 +12,9 @@
 
 	<groupId>com.duoc</groupId>
 	<artifactId>mscontrol-visitas</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>mscontrol-visitas</name>
-	<description>Proyecto para autenticar usuarios en servicio SCAV</description>
+	<description>Proyecto para gestionar visitas en servicio SCAV</description>
 
 	<properties>
 		<java.version>17</java.version>
@@ -93,6 +93,11 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.5.4</version> <!-- This is compatible with PostgreSQL 16; adjust as needed -->
 		</dependency>
 	</dependencies>
 

@@ -15,8 +15,6 @@ public class VehiculoDto {
     private String patente;
     private String marca;
     private String modelo;
-    private int anio;
-    private String color;
     private Long residenteId;
     private Long visitaId;
     private Long estacionamientoId;

@@ -41,6 +41,11 @@ public class AutorizacionImpl implements IAutorizacion {
         autorizacionRepository.save(autorizacion);
     }
 
+    @Override
+    public List<Autorizacion> listarAutorizacionesPendientesPorResidente(Long residenteId) {
+        return autorizacionRepository.findPendientesByResidente(residenteId);
+    }
+
 
     @Override
     public List<Autorizacion> listarAutorizacionesPendientes() {

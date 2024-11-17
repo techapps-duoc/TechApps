@@ -9,4 +9,6 @@ public interface IAutorizacion {
     Autorizacion registrarAutorizacion(AutorizacionDto autorizacionDto);
     void actualizarEstadoAutorizacion(Long id, String nuevoEstado);
     List<Autorizacion> listarAutorizacionesPendientes();
+    List<Autorizacion> listarAutorizacionesPendientesPorResidente(Long residenteId);
+
 }

@@ -140,6 +140,17 @@ public class VehiculoController {
         return ResponseEntity.ok(responseData);
     }
 
+    @GetMapping("vehiculo/buscarPorVisita/{visitaId}")
+    public ResponseEntity<VehiculoDto> buscarVehiculoPorVisitaId(@PathVariable Long visitaId) {
+        Vehiculo vehiculo = vehiculoService.buscarVehiculoPorVisitaId(visitaId);
+        if (vehiculo != null) {
+            VehiculoDto vehiculoDto = convertToDto(vehiculo);
+            return ResponseEntity.ok(vehiculoDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("vehiculos")
     public ResponseEntity<List<Map<String, Object>>> obtenerAll() {
         List<Vehiculo> vehiculos = vehiculoService.findAll();
@@ -156,8 +167,6 @@ public class VehiculoController {
                 .patente(vehiculo.getPatente())
                 .marca(vehiculo.getMarca())
                 .modelo(vehiculo.getModelo())
-                .anio(vehiculo.getAnio())
-                .color(vehiculo.getColor())
                 .visitaId(vehiculo.getVisita() != null ? vehiculo.getVisita().getId() : null)
                 .residenteId(vehiculo.getResidente() != null ? vehiculo.getResidente().getId() : null)
                 .build();
@@ -169,8 +178,6 @@ public class VehiculoController {
         data.put("patente", vehiculo.getPatente());
         data.put("marca", vehiculo.getMarca());
         data.put("modelo", vehiculo.getModelo());
-        data.put("anio", vehiculo.getAnio());
-        data.put("color", vehiculo.getColor());
         data.put("estacionamiento_id", vehiculo.getEstacionamientoId());
 
         // Verificar si el vehículo tiene un residente asociado
@@ -219,7 +226,6 @@ public class VehiculoController {
             vehicleData.put("patente", root.path("plate").asText());
             vehicleData.put("marca", root.path("make").asText());
             vehicleData.put("modelo", root.path("model").asText());
-            vehicleData.put("anio", root.path("year").asInt());
 
             // Obtener los datos del propietario
             JsonNode ownerNode = root.path("owner");
@@ -232,13 +238,11 @@ public class VehiculoController {
                 String firstName = nameParts.length > 0 ? nameParts[0] : "";
                 String lastName = nameParts.length > 1 ? String.join(" ", Arrays.copyOfRange(nameParts, 2, nameParts.length)) : "";
 
-                // Eliminar el guion del RUT
-                String rutSinGuion = rut.replace("-", "");
 
                 // Añadir los datos procesados al mapa
                 vehicleData.put("primer_nombre", firstName);
                 vehicleData.put("apellidos", lastName);
-                vehicleData.put("rut", rutSinGuion);
+                vehicleData.put("rut", rut);
             }
         } catch (Exception e) {
             e.printStackTrace();

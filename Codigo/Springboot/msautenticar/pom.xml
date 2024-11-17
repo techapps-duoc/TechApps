@@ -13,7 +13,7 @@
 
 	<groupId>com.duoc</groupId>
 	<artifactId>msautenticar</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>msautenticar</name>
 	<description>Proyecto para autenticar usuarios en servicio scav</description>
 
@@ -112,6 +112,11 @@
 			<groupId>jakarta.mail</groupId>
 			<artifactId>jakarta.mail-api</artifactId>
 			<version>2.0.1</version> <!-- O la última versión disponible -->
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.5.4</version> <!-- This is compatible with PostgreSQL 16; adjust as needed -->
 		</dependency>
 	</dependencies>
 
