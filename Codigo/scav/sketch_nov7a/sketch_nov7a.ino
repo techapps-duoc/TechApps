@@ -3,7 +3,7 @@
 Servo servol;  // Crear un objeto de servo
 
 // Definir los pines y límites del servomotor
-int PINSERVO = 2;
+int PINSERVO = 10;
 int PULSOMIN = 1000;   // Pulso mínimo en microsegundos
 int PULSOMAX = 2000;   // Pulso máximo en microsegundos
 

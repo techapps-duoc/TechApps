@@ -8,7 +8,7 @@ from datetime import datetime
 
 # Inicializar conexión con Arduino
 try:
-    arduino = ArduinoControl(port='COM6')
+    arduino = ArduinoControl(port='COM4')
 except Exception as e:
     print(f"Error al conectar con Arduino: {e}")
     arduino = None

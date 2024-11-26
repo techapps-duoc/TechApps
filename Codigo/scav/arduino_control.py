@@ -2,7 +2,7 @@ import serial
 import time
 
 class ArduinoControl:
-    def __init__(self, port='COM6', baud_rate=9600):
+    def __init__(self, port='COM4', baud_rate=9600):
         """Inicializa la conexión con Arduino."""
         try:
             self.arduino = serial.Serial(port, baud_rate, timeout=1)
