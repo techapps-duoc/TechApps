@@ -326,7 +326,12 @@ class _FormVisita2State extends State<FormVisita2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Detalles de la Visita"),
+        title: Text("Detalles de la Visita",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),),
+      backgroundColor: Colors.blue.shade700,
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -352,40 +357,102 @@ class _FormVisita2State extends State<FormVisita2> {
                     children: [
                       Text(
                         "Información de la Visita",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue.shade700,
+                          ),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 10),
-                      TextFormField(
-                        controller: _rutController,
-                        decoration: InputDecoration(labelText: "RUT", prefixIcon: Icon(Icons.person)),
-                        onChanged: (value) {
-                          if (value.isNotEmpty) _searchVisit(value);
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        controller: _nombreController,
-                        decoration: InputDecoration(labelText: "Nombre", prefixIcon: Icon(Icons.person)),
-                        readOnly: _visitExists,
-                      ),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        controller: _apellidoController,
-                        decoration: InputDecoration(labelText: "Apellido", prefixIcon: Icon(Icons.person)),
-                        readOnly: _visitExists,
-                      ),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        controller: _vehicleLicenseController,
-                        decoration: InputDecoration(labelText: "Patente", prefixIcon: Icon(Icons.directions_car)),
-                        readOnly: _visitExists, // Bloquear si la visita existe
-                      ),
-                      SizedBox(height: 20),
+
+                      // TextFormField(
+                      //   controller: _rutController,
+                      //   decoration: InputDecoration(hintText:"RUT", prefixIcon: Icon(Icons.person)),
+                      //   onChanged: (value) {
+                      //     if (value.isNotEmpty) _searchVisit(value);
+                      //   },
+                      // ),
+                      // SizedBox(height: 10),
+
+                      _buildInputField(
+                      controller: _rutController,
+                      hintText: 'RUT',
+                      labelText: 'RUT',
+                      icon: Icons.person,
+                      readOnly: true,
+                    ),
+                    const SizedBox(height: 10),
+
+                      // TextFormField(
+                      //   controller: _nombreController,
+                      //   decoration: InputDecoration(labelText: "Nombre", prefixIcon: Icon(Icons.person)),
+                      //   readOnly: _visitExists,
+                      // ),
+                      // SizedBox(height: 10),
+
+                      _buildInputField(
+                      controller: _nombreController,
+                      hintText: 'Nombre',
+                      labelText: 'Nombre',
+                      icon: Icons.person,
+                      readOnly: true,
+                    ),
+                    const SizedBox(height: 10),
+
+                      // TextFormField(
+                      //   controller: _apellidoController,
+                      //   decoration: InputDecoration(labelText: "Apellido", prefixIcon: Icon(Icons.person)),
+                      //   readOnly: _visitExists,
+                      // ),
+                      // SizedBox(height: 10),
+
+                      _buildInputField(
+                      controller: _apellidoController,
+                      hintText: 'Apellido',
+                      labelText: 'Apellido',
+                      icon: Icons.person,
+                      readOnly: true,
+                    ),
+                    const SizedBox(height: 10),
+
+                      // TextFormField(
+                      //   controller: _vehicleLicenseController,
+                      //   decoration: InputDecoration(labelText: "Patente", prefixIcon: Icon(Icons.directions_car)),
+                      //   readOnly: _visitExists, // Bloquear si la visita existe
+                      // ),
+                      // SizedBox(height: 20),
+
+                      _buildInputField(
+                      controller: _vehicleLicenseController,
+                      hintText: 'Patente',
+                      labelText: 'Patente',
+                      icon: Icons.car_repair,
+                      readOnly: true,
+                    ),
+                    const SizedBox(height: 10),
+
+                      
                       ElevatedButton(
                         onPressed: _saveVisit,
-                        child: Text("Guardar"),
+                                                style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade700,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 8,
+                          shadowColor: Colors.black.withOpacity(0.2),
+                        ),
+                        child: const Text(
+                          "Guardar",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                       ),
+                        ),),
                     ],
                   ),
                 ),
@@ -397,3 +464,43 @@ class _FormVisita2State extends State<FormVisita2> {
     );
   }
 }
+
+
+// Método reutilizable para construir campos de entrada con sombra y bordes redondeados
+Widget _buildInputField({
+  required TextEditingController controller,
+  required String hintText,
+  required String labelText,
+  required IconData icon,
+  bool enabled = true,
+  bool readOnly = false,
+}) {
+  return Container(
+    margin: const EdgeInsets.symmetric(vertical: 8.0),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(15),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 8,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: TextFormField(
+      controller: controller,
+      enabled: enabled,
+      readOnly: readOnly,
+      decoration: InputDecoration(
+        hintText: hintText,
+        labelText: labelText,
+        prefixIcon: Icon(icon, color: Colors.blue.shade700),
+        border: InputBorder.none,
+        contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+      ),
+      style: const TextStyle(fontSize: 16),
+    ),
+  );
+}
+
