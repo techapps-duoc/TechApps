@@ -31,7 +31,7 @@ class _FormVisita1State extends State<FormVisita1> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('authToken');
 
-      final url = '${AppConfig.apiUrl}:30020/api/v1/residente/buscar/torre/${torreController.text}/departamento/${numeroDomicilioController.text}';
+      final url = '${AppConfig.apiUrl}:30030/api/v1/residente/buscar/torre/${torreController.text}/departamento/${numeroDomicilioController.text}';
 
       try {
         final response = await http.get(
@@ -170,27 +170,39 @@ Widget build(BuildContext context) {
 
                     // Campos de Torre y Número de Domicilio
                     Row(
-                      children: [
-                        Expanded(
-                          child: _buildInputField(
-                            controller: torreController,
-                            hintText: 'Torre',
-                            labelText: 'Torre',
-                            icon: Icons.apartment,
-                            enabled: tipoResidencia == 'departamento',
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: torreController,
+                              enabled: tipoResidencia == 'departamento',
+                              decoration: InputDecoration(
+                                hintText: 'Torre',
+                                labelText: 'Torre',
+                                prefixIcon: Icon(Icons.apartment, color: Colors.grey),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onChanged: (_) => _buscarResidente(),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: _buildInputField(
-                            controller: numeroDomicilioController,
-                            hintText: 'Número Domicilio',
-                            labelText: 'Número Domicilio',
-                            icon: Icons.format_list_numbered,
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: TextFormField(
+                              controller: numeroDomicilioController,
+                              decoration: InputDecoration(
+                                hintText: 'Número Domicilio',
+                                labelText: 'Número Domicilio',
+                                prefixIcon: Icon(Icons.format_list_numbered, color: Colors.grey),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onChanged: (_) => _buscarResidente(),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                     const SizedBox(height: 10),
 
                     // Campos de Nombre, Apellido y Correo

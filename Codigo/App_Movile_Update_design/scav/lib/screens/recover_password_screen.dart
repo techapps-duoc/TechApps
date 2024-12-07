@@ -81,7 +81,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.lightBlue.shade800, Colors.lightBlue.shade50],
+            colors: [Color(0xFF0D47A1), Color(0xFF42A5F5)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),

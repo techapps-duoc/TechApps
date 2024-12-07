@@ -64,7 +64,7 @@ class _EditPersonalInfoScreenState extends State<EditPersonalInfoScreen> {
     try {
       final response = await http.put(
         Uri.parse(
-            '${AppConfig.apiUrl}:30020/api/v1/residente/editar/${_idController.text}'),
+            '${AppConfig.apiUrl}:30030/api/v1/residente/editar/${_idController.text}'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

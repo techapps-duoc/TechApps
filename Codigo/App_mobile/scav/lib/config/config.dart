@@ -1,3 +1,3 @@
 class AppConfig {
-  static String apiUrl = "http://34.55.12.174";
+  static String apiUrl = "http://146.148.99.93";
 }

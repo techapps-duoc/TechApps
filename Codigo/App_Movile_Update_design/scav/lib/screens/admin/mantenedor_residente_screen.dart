@@ -34,7 +34,7 @@ class _MantenedorResidenteFormState extends State<MantenedorResidenteForm> {
   Future<void> _fetchResidentes() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('authToken');
-    final url = '${AppConfig.apiUrl}:30020/api/v1/residente/listar';
+    final url = '${AppConfig.apiUrl}:30030/api/v1/residente/listar';
 
     try {
       final response = await http.get(
@@ -98,7 +98,7 @@ class _MantenedorResidenteFormState extends State<MantenedorResidenteForm> {
   };
 
   // URL de la API para registrar el residente
-  final urlRegistrarResidente = '${AppConfig.apiUrl}:30020/api/v1/residente/registrar';
+  final urlRegistrarResidente = '${AppConfig.apiUrl}:30030/api/v1/residente/registrar';
 
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -187,7 +187,7 @@ void _eliminarResidente(String username, int residenteId) async {
 
   // URLs para eliminar usuario y residente
   final urlEliminarUsuario = '${AppConfig.apiUrl}:30010/auth/eliminar/$username';
-  final urlEliminarResidente = '${AppConfig.apiUrl}:30020/api/v1/residente/eliminar/$residenteId';
+  final urlEliminarResidente = '${AppConfig.apiUrl}:30030/api/v1/residente/eliminar/$residenteId';
 
   print("Eliminando usuariio $username del residenteId $residenteId");
 

@@ -37,7 +37,7 @@ class _EditResidenteFormState extends State<EditResidenteForm> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('authToken');
     final int residenteId = widget.residente['id'];
-    final url = '${AppConfig.apiUrl}:30020/api/v1/residente/editar/$residenteId';
+    final url = '${AppConfig.apiUrl}:30030/api/v1/residente/editar/$residenteId';
 
     final residenteData = {
       "rut": _rutController.text,

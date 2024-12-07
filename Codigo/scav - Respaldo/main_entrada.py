@@ -64,7 +64,7 @@ def registrar_entrada_bitacora(vehiculo_id):
 def main():
     global ultima_patente, ultimo_tiempo  # Asegurarse de utilizar las variables globales
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 

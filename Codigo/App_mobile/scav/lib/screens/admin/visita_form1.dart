@@ -31,7 +31,7 @@ class _FormVisita1State extends State<FormVisita1> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('authToken');
 
-      final url = '${AppConfig.apiUrl}:30020/api/v1/residente/buscar/torre/${torreController.text}/departamento/${numeroDomicilioController.text}';
+      final url = '${AppConfig.apiUrl}:30030/api/v1/residente/buscar/torre/${torreController.text}/departamento/${numeroDomicilioController.text}';
 
       try {
         final response = await http.get(

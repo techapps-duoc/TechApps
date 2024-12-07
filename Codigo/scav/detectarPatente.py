@@ -1,103 +1,91 @@
+
 import cv2
 import numpy as np
 import pytesseract
 import re
 
-# Ruta de Tesseract en tu sistema (asegúrate de tenerlo instalado)
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-# Rango de colores en HSV para blanco, amarillo, naranjo y negro
-COLOR_RANGES = {
-    'blanco': ([0, 0, 200], [180, 30, 255]),  # Blanco
-    'amarillo': ([20, 100, 100], [30, 255, 255]),  # Amarillo
-    'naranjo': ([10, 100, 100], [20, 255, 255]),   # Naranjo
-    'negro': ([0, 0, 0], [180, 255, 50])  # Negro
-}
-
 def filtrar_patente(plate_text):
-    """Filtra solo letras y números de la cadena OCR."""
     return re.sub(r'[^A-Z0-9]', '', plate_text)
 
-def detectar_color_patente(frame):
-    """Detecta el color predominante de la patente (blanco, amarillo, naranjo o negro)."""
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    for color, (lower, upper) in COLOR_RANGES.items():
-        mask = cv2.inRange(hsv, np.array(lower, dtype=np.uint8), np.array(upper, dtype=np.uint8))
-        if np.count_nonzero(mask) > 500:  # Ajustar para evitar falsos positivos
-            return color
-    return None
+def aumentar_contraste_y_reducir_ruido(gray):
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    enhanced = clahe.apply(gray)
+    return cv2.fastNlMeansDenoising(enhanced, None, 30, 7, 21)
 
 def preprocesar_imagen(frame):
-    """Convierte la imagen a escala de grises y aplica suavizado y umbral adaptativo."""
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    blur = cv2.GaussianBlur(gray, (5, 5), 0)
-    thresh = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                cv2.THRESH_BINARY, 11, 2)
+    enhanced = aumentar_contraste_y_reducir_ruido(gray)
+    thresh = cv2.adaptiveThreshold(enhanced, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                   cv2.THRESH_BINARY, 11, 2)
     return thresh
 
 def detectar_contornos(frame):
-    """Detecta los contornos relevantes en la imagen."""
-    edges = cv2.Canny(frame, 50, 150)
+    edges = cv2.Canny(frame, 100, 200)
     contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     return contours
 
 def es_patente_contorno(contour):
-    """Filtra contornos por tamaño aproximado de una patente."""
     x, y, w, h = cv2.boundingRect(contour)
     aspect_ratio = w / h
     area = cv2.contourArea(contour)
-    return 2.0 < aspect_ratio < 5.5 and 250 < area < 15000
+    return 2.5 < aspect_ratio < 5.5 and 500 < area < 20000
 
 def extraer_texto_patente(roi):
-    """Aplica OCR en la región seleccionada y retorna el texto filtrado."""
-    plate_text = pytesseract.image_to_string(roi, config='--psm 8').strip()
+    roi = cv2.resize(roi, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    roi = cv2.GaussianBlur(roi, (5, 5), 0)
+    plate_text = pytesseract.image_to_string(roi, config='--psm 7').strip()
     return filtrar_patente(plate_text)
 
-def detectar_patente(frame):
-    """Detecta la patente en la imagen dada."""
-    preprocessed_frame = preprocesar_imagen(frame)
-    contours = detectar_contornos(preprocessed_frame)
+def detectar_patente(frame, return_intermediate=False):
+    """
+    Detecta la patente en la imagen dada, opcionalmente retornando imágenes intermedias.
+    """
+    # Reducir la resolución para mejorar el rendimiento
+    frame = cv2.resize(frame, (640, 480))
 
+    # Convertir a escala de grises y aplicar preprocesamiento
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray = cv2.blur(gray, (3, 3))
+    canny = cv2.Canny(gray, 150, 200)
+    canny = cv2.dilate(canny, None, iterations=1)
+
+    # Mostrar la imagen de bordes para depuración
+    if return_intermediate:
+        cv2.imshow('Bordes (Canny)', canny)
+
+    # Encontrar contornos
+    contours, _ = cv2.findContours(canny, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    roi = None
     for contour in contours:
-        if es_patente_contorno(contour):
-            x, y, w, h = cv2.boundingRect(contour)
-            roi = frame[y:y + h, x:x + w]
-            patente = extraer_texto_patente(roi)
+        area = cv2.contourArea(contour)
+        x, y, w, h = cv2.boundingRect(contour)
+        epsilon = 0.09 * cv2.arcLength(contour, True)
+        approx = cv2.approxPolyDP(contour, epsilon, True)
 
-            if patente:
-                color = detectar_color_patente(roi)
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                cv2.putText(frame, f'Patente: {patente}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
-                if color:
-                    cv2.putText(frame, f'Color: {color}', (x, y + h + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
-                return patente
+        # Filtrar contornos con forma rectangular y tamaño adecuado
+        if len(approx) == 4 and area > 5000:
+            aspect_ratio = float(w) / h
+            if aspect_ratio > 2.0:
+                # Recortar la región de la patente
+                roi = gray[y:y + h, x:x + w]
 
-    return None
+                # Reducir el tamaño de la región antes de OCR
+                roi = cv2.resize(roi, (200, 50))
 
-# Prueba en tiempo real con la cámara
-def main():
-    cap = cv2.VideoCapture(0)  # Asegúrate de que la cámara esté conectada
-    if not cap.isOpened():
-        print("Error al abrir la cámara.")
-        return
+                # Reconocer texto con Tesseract
+                text = pytesseract.image_to_string(roi, config='--psm 8 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
 
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            print("No se pudo obtener el frame de la cámara.")
-            break
+                # Filtrar solo caracteres alfanuméricos
+                filtered_text = re.sub(r'[^A-Za-z0-9]', '', text).upper()
 
-        patente = detectar_patente(frame)
-        if patente:
-            print(f"Patente detectada: {patente}")
+                # Mostrar la ROI solo si se detecta texto válido
+                if return_intermediate and filtered_text:
+                    cv2.imshow('Patente Detectada', roi)
 
-        cv2.imshow('Detección de Patente', frame)
+                if filtered_text:
+                    return (filtered_text, canny, roi) if return_intermediate else filtered_text
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+    return (None, canny, roi) if return_intermediate else None
 
-    cap.release()
-    cv2.destroyAllWindows()
-
-if __name__ == "__main__":
-    main()

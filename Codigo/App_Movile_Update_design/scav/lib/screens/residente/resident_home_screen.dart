@@ -627,7 +627,7 @@ class _ResidentHomeScreenState extends State<ResidentHomeScreen> {
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
-                                      'Deuda Total: ${multa['totalDeuda']} UF',
+                                      'Deuda Total: ${multa['totalDeuda']} PESOS',
                                       style: const TextStyle(
                                         fontSize: 16,
                                         color: Colors.black87,
