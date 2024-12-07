@@ -18,7 +18,7 @@ class _RegisterVisitScreenState extends State<RegisterVisitScreen> {
   final TextEditingController _apellidoController = TextEditingController();
   final TextEditingController _vehicleLicenseController = TextEditingController();
   DateTime _selectedDateTime = DateTime.now();
-  String _fechaSeleccionada = 'Seleccionar Fecha y Hora de la Visita'; // Definimos la variable para mostrar la fecha seleccionada
+  String _fechaSeleccionada = 'Seleccionar Fecha y Hora'; // Definimos la variable para mostrar la fecha seleccionada
   bool _visitExists = false;
   bool _vehicleExists = false;
   int? _visitId;

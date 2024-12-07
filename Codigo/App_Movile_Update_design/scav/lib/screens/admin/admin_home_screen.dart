@@ -289,238 +289,236 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   }
 
   Widget _buildBitacoraCard() {
-    if (isLoading) {
-      return Center(child: CircularProgressIndicator());
-    }
-    if (bitacoras.isEmpty) {
-      return Center(child: Text("No se encontraron registros en la bitácora."));
-    }
-
-    return Card(
-      margin: EdgeInsets.all(16),
-      elevation: 8,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Registros de Bitácora',
-                  style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold),
-                ),
-                GestureDetector(
-                  onTap: _fetchBitacoras, // Acción del botón
-                  child: Container(
-                    width: 40, // Ancho del círculo
-                    height: 40, // Altura del círculo
-                    decoration: const BoxDecoration(
-                      color: Colors.blue, // Color de fondo azul
-                      shape: BoxShape.circle, // Forma circular
-                    ),
-                    child: const Icon(
-                      Icons.refresh,
-                      color: Colors.white, // Color del icono
-                      size: 32, // Tamaño del icono
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white, // Fondo blanco para el buscador
-                borderRadius: BorderRadius.circular(12), // Bordes redondeados
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5), // Color de la sombra
-                    blurRadius: 10, // Desenfoque de la sombra
-                    offset: const Offset(0, 4), // Desplazamiento de la sombra
-                  ),
-                ],
-              ),
-              child: TextField(
-                controller: searchController,
-                decoration: InputDecoration(
-                  labelText: 'Buscar por Patente',
-                  labelStyle:
-                      TextStyle(color: Colors.grey[600]), // Estilo del texto
-                  border: InputBorder.none, // Elimina el borde predeterminado
-                  prefixIcon: const Icon(Icons.search,
-                      color: Colors.blue), // Ícono de búsqueda
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 5, horizontal: 10), // Espaciado interno
-                ),
-                onChanged: _filterBitacoras,
-              ),
-            ),
-            const SizedBox(height: 10),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                headingRowColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.blue.shade100),
-                dataRowColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.white), // Fondo de las filas
-                columnSpacing: 20,
-                headingTextStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Colors.blue.shade900,
-                ),
-                dataTextStyle: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.black87,
-                ),
-                columns: const [
-                  DataColumn(label: Text('Patente')),
-                  DataColumn(
-                    label: Text(
-                      'Fecha\nEntrada',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Hora\nEntrada',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Hora\nSalida',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  DataColumn(label: Text('Tipo')),
-                ],
-                rows: _getCurrentPageItems().map((bitacora) {
-                  final vehiculo = bitacora['vehiculo'];
-                  final esVisita = vehiculo['visita'] != null;
-
-                  // Función para formatear fecha (YY-MM-DD)
-                  String formatFecha(String? fecha) {
-                    if (fecha == null || fecha.isEmpty) return 'N/A';
-                    try {
-                      final parsedDate = DateTime.parse(fecha);
-                      return '${parsedDate.year.toString().substring(2)}-${parsedDate.month.toString().padLeft(2, '0')}-${parsedDate.day.toString().padLeft(2, '0')}';
-                    } catch (e) {
-                      return 'N/A';
-                    }
-                  }
-
-                  // Función para extraer hora (HH:MM)
-                  String formatHora(String? fecha) {
-                    if (fecha == null || fecha.isEmpty) return 'N/A';
-                    try {
-                      final parsedDate = DateTime.parse(fecha);
-                      return '${parsedDate.hour.toString().padLeft(2, '0')}:${parsedDate.minute.toString().padLeft(2, '0')}';
-                    } catch (e) {
-                      return 'N/A';
-                    }
-                  }
-
-                  return DataRow(
-                    cells: [
-                      DataCell(Text(vehiculo['patente'])), // Patente
-                      DataCell(Text(
-                          formatFecha(bitacora['fechain']))), // Fecha Entrada
-                      DataCell(Text(
-                          formatHora(bitacora['fechain']))), // Hora Entrada
-                      DataCell(Text(
-                          formatHora(bitacora['fechaout']))), // Hora Salida
-
-                      DataCell(
-                        Row(
-                          children: [
-                            Container(
-                              width: 25, // Ancho del círculo
-                              height: 25, // Altura del círculo
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle, // Forma de círculo
-                                color: esVisita
-                                    ? Colors.orange
-                                    : Colors.green, // Color según el tipo
-                              ),
-                            ),
-                            const SizedBox(
-                                width:
-                                    8), // Espacio entre el círculo y el texto
-                            Text(
-                              esVisita ? 'VISITA' : 'RESIDENTE',
-                              style: TextStyle(
-                                color: esVisita
-                                    ? Colors.orange.shade800
-                                    : Colors.green.shade800,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                }).toList(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: _previousPage,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade700,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    'Anterior',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Text(
-                  'Página ${currentPage + 1} de ${((filteredBitacoras.length - 1) / itemsPerPage).ceil() + 1}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                ElevatedButton(
-                  onPressed: _nextPage,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade700,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    'Siguiente',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+  if (isLoading) {
+    return const Center(child: CircularProgressIndicator());
   }
+  if (bitacoras.isEmpty) {
+    return const Center(child: Text("No se encontraron registros en la bitácora."));
+  }
+
+  // Calcular total de páginas
+  final int totalPages = (filteredBitacoras.length / itemsPerPage).ceil();
+
+  return Card(
+    margin: const EdgeInsets.all(16),
+    elevation: 8,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Registros de Bitácora',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              GestureDetector(
+                onTap: _fetchBitacoras, // Acción del botón refresh
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: const BoxDecoration(
+                    color: Colors.blue, // Color de fondo azul
+                    shape: BoxShape.circle, // Forma circular
+                  ),
+                  child: const Icon(
+                    Icons.refresh,
+                    color: Colors.white, // Color del icono
+                    size: 32, // Tamaño del icono
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white, // Fondo blanco para el buscador
+              borderRadius: BorderRadius.circular(12), // Bordes redondeados
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5), // Color de la sombra
+                  blurRadius: 10, // Desenfoque de la sombra
+                  offset: const Offset(0, 4), // Desplazamiento de la sombra
+                ),
+              ],
+            ),
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                labelText: 'Buscar por Patente',
+                labelStyle: TextStyle(color: Colors.grey[600]), // Estilo del texto
+                border: InputBorder.none, // Elimina el borde predeterminado
+                prefixIcon: const Icon(Icons.search, color: Colors.blue), // Ícono de búsqueda
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 5, horizontal: 10,
+                ), // Espaciado interno
+              ),
+              onChanged: _filterBitacoras,
+            ),
+          ),
+          const SizedBox(height: 10),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              headingRowColor: MaterialStateColor.resolveWith(
+                  (states) => Colors.blue.shade100),
+              dataRowColor: MaterialStateColor.resolveWith(
+                  (states) => Colors.white), // Fondo de las filas
+              columnSpacing: 20,
+              headingTextStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.blue.shade900,
+              ),
+              dataTextStyle: const TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
+              columns: const [
+                DataColumn(label: Text('Patente')),
+                DataColumn(
+                  label: Text(
+                    'Fecha\nEntrada',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                DataColumn(
+                  label: Text(
+                    'Hora\nEntrada',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                DataColumn(
+                  label: Text(
+                    'Hora\nSalida',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                DataColumn(label: Text('Tipo')),
+              ],
+              rows: _getCurrentPageItems().map((bitacora) {
+                final vehiculo = bitacora['vehiculo'];
+                final esVisita = vehiculo['visita'] != null;
+
+                String formatFecha(String? fecha) {
+                  if (fecha == null || fecha.isEmpty) return 'N/A';
+                  try {
+                    final parsedDate = DateTime.parse(fecha);
+                    return '${parsedDate.year.toString().substring(2)}-${parsedDate.month.toString().padLeft(2, '0')}-${parsedDate.day.toString().padLeft(2, '0')}';
+                  } catch (e) {
+                    return 'N/A';
+                  }
+                }
+
+                String formatHora(String? fecha) {
+                  if (fecha == null || fecha.isEmpty) return 'N/A';
+                  try {
+                    final parsedDate = DateTime.parse(fecha);
+                    return '${parsedDate.hour.toString().padLeft(2, '0')}:${parsedDate.minute.toString().padLeft(2, '0')}';
+                  } catch (e) {
+                    return 'N/A';
+                  }
+                }
+
+                return DataRow(
+                  cells: [
+                    DataCell(Text(vehiculo['patente'])), // Patente
+                    DataCell(Text(formatFecha(bitacora['fechain']))), // Fecha Entrada
+                    DataCell(Text(formatHora(bitacora['fechain']))), // Hora Entrada
+                    DataCell(Text(formatHora(bitacora['fechaout']))), // Hora Salida
+                    DataCell(
+                      Row(
+                        children: [
+                          Container(
+                            width: 25,
+                            height: 25,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: esVisita
+                                  ? Colors.orange
+                                  : Colors.green, // Color según el tipo
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            esVisita ? 'VISITA' : 'RESIDENTE',
+                            style: TextStyle(
+                              color: esVisita
+                                  ? Colors.orange.shade800
+                                  : Colors.green.shade800,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                onPressed: _previousPage,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue.shade700,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  'Anterior',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+              Text(
+                '${currentPage + 1} de $totalPages',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              ElevatedButton(
+                onPressed: _nextPage,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue.shade700,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  'Siguiente',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 
   Widget _buildMantenedoresOptions() {
     return Column(

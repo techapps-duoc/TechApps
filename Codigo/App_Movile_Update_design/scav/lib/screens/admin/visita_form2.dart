@@ -326,12 +326,14 @@ class _FormVisita2State extends State<FormVisita2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Detalles de la Visita",
+        title: Text(
+          "Detalles de la Visita",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-          ),),
-      backgroundColor: Colors.blue.shade700,
+          ),
+        ),
+        backgroundColor: Colors.blue.shade700,
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -361,81 +363,55 @@ class _FormVisita2State extends State<FormVisita2> {
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.blue.shade700,
-                          ),
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 10),
 
-                      // TextFormField(
-                      //   controller: _rutController,
-                      //   decoration: InputDecoration(hintText:"RUT", prefixIcon: Icon(Icons.person)),
-                      //   onChanged: (value) {
-                      //     if (value.isNotEmpty) _searchVisit(value);
-                      //   },
-                      // ),
-                      // SizedBox(height: 10),
+                      _buildInputField(
+                        controller: _rutController,
+                        hintText: 'RUT',
+                        labelText: 'RUT',
+                        icon: Icons.person,
+                        readOnly: false, // Para que el usuario pueda ingresarlo
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            _searchVisit(value);
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 10),
 
                       _buildInputField(
-                      controller: _rutController,
-                      hintText: 'RUT',
-                      labelText: 'RUT',
-                      icon: Icons.person,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 10),
-
-                      // TextFormField(
-                      //   controller: _nombreController,
-                      //   decoration: InputDecoration(labelText: "Nombre", prefixIcon: Icon(Icons.person)),
-                      //   readOnly: _visitExists,
-                      // ),
-                      // SizedBox(height: 10),
+                        controller: _nombreController,
+                        hintText: 'Nombre',
+                        labelText: 'Nombre',
+                        icon: Icons.person,
+                        readOnly: true,
+                      ),
+                      const SizedBox(height: 10),
 
                       _buildInputField(
-                      controller: _nombreController,
-                      hintText: 'Nombre',
-                      labelText: 'Nombre',
-                      icon: Icons.person,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 10),
-
-                      // TextFormField(
-                      //   controller: _apellidoController,
-                      //   decoration: InputDecoration(labelText: "Apellido", prefixIcon: Icon(Icons.person)),
-                      //   readOnly: _visitExists,
-                      // ),
-                      // SizedBox(height: 10),
+                        controller: _apellidoController,
+                        hintText: 'Apellido',
+                        labelText: 'Apellido',
+                        icon: Icons.person,
+                        readOnly: true,
+                      ),
+                      const SizedBox(height: 10),
 
                       _buildInputField(
-                      controller: _apellidoController,
-                      hintText: 'Apellido',
-                      labelText: 'Apellido',
-                      icon: Icons.person,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 10),
+                        controller: _vehicleLicenseController,
+                        hintText: 'Patente',
+                        labelText: 'Patente',
+                        icon: Icons.car_repair,
+                        readOnly: true,
+                      ),
+                      const SizedBox(height: 10),
 
-                      // TextFormField(
-                      //   controller: _vehicleLicenseController,
-                      //   decoration: InputDecoration(labelText: "Patente", prefixIcon: Icon(Icons.directions_car)),
-                      //   readOnly: _visitExists, // Bloquear si la visita existe
-                      // ),
-                      // SizedBox(height: 20),
-
-                      _buildInputField(
-                      controller: _vehicleLicenseController,
-                      hintText: 'Patente',
-                      labelText: 'Patente',
-                      icon: Icons.car_repair,
-                      readOnly: true,
-                    ),
-                    const SizedBox(height: 10),
-
-                      
                       ElevatedButton(
                         onPressed: _saveVisit,
-                                                style: ElevatedButton.styleFrom(
+                        style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue.shade700,
                           padding: const EdgeInsets.symmetric(
                               horizontal: 50, vertical: 15),
@@ -451,8 +427,9 @@ class _FormVisita2State extends State<FormVisita2> {
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                        ),),
                     ],
                   ),
                 ),
@@ -465,8 +442,6 @@ class _FormVisita2State extends State<FormVisita2> {
   }
 }
 
-
-// Método reutilizable para construir campos de entrada con sombra y bordes redondeados
 Widget _buildInputField({
   required TextEditingController controller,
   required String hintText,
@@ -474,6 +449,7 @@ Widget _buildInputField({
   required IconData icon,
   bool enabled = true,
   bool readOnly = false,
+  ValueChanged<String>? onChanged, // Nuevo parámetro
 }) {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -492,6 +468,7 @@ Widget _buildInputField({
       controller: controller,
       enabled: enabled,
       readOnly: readOnly,
+      onChanged: onChanged, // Asignando el callback
       decoration: InputDecoration(
         hintText: hintText,
         labelText: labelText,
@@ -503,4 +480,3 @@ Widget _buildInputField({
     ),
   );
 }
-
