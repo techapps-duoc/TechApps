@@ -10,7 +10,6 @@ from config import API_URL, API_KEY  # Importar API_URL y API_KEY desde config.p
 # Inicializar conexión con Arduino
 try:
     arduino = ArduinoControl(port='COM7')
-    arduino.enviar_comando("subir")
 except Exception as e:
     print(f"Error al conectar con Arduino: {e}")
     arduino = None
@@ -19,7 +18,7 @@ except Exception as e:
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 # Inicializar la cámara web
-cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 if not cap.isOpened():
     print("Error: No se pudo acceder a la cámara.")
